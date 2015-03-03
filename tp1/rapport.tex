@@ -203,18 +203,29 @@ D'après les résultats obtenus, les prédicteurs qui semblent influer le plus s
 
 Autrement dit, le problème majeur est que le critère RSS est insuffisant : plus on a de prédicteurs, meilleure la régression est jugée. Or, les prédictions peuvent se détériorer lorsqu'on utilise des prédicteurs superflus qui ne servent qu'à approcher le bruit.
 
-\item Pour chaque $k$ dans ${0, ..., 8}$, on fait varier le choix des prédicteurs afin de minimiser le RSS. La courbe des RSS ainsi obtenus vérifie bien la décroissance avec le nombre de prédicteurs. On observe un saut important à l'ajout du premier prédicteur (le RSS diminue de moitié), ce qui n'a rien d'étonnant : cela témoigne de l'intérêt de faire une régression. A l'ajout du deuxième puis du troisième prédicteur, le RSS diminue encore assez significativement, puis il reste presque inchangé au-delà.
+\item Pour chaque $k$ dans $\{0, ..., 8\}$, on fait varier le choix des prédicteurs afin de minimiser le RSS. La courbe des RSS ainsi obtenus vérifie bien la décroissance avec le nombre de prédicteurs. On observe un saut important à l'ajout du premier prédicteur (le RSS diminue de moitié), ce qui n'a rien d'étonnant : cela témoigne de l'intérêt de faire une régression. A l'ajout du deuxième puis du troisième prédicteur, le RSS diminue encore assez significativement, puis il reste presque inchangé au-delà.
 
 \begin{figure}
 \begin{center}
 \includegraphics[scale=0.7]{rss.pdf}
-\caption{Graphe des RSS en fonction du nombre de predicteurs}
+\caption{Graphe des RSS en fonction du nombre de prédicteurs}
 \end{center}
 \end{figure}
 
+On indique ci-dessous les sous-ensembles de prédicteurs qui réalisent le minimum de RSS, à nombre $k$ de prédicteurs fixé :
+\begin{itemize}
+\item $k = 0: \emptyset$
+\item $k = 1: \{lcavol\}$
+\item $k = 2: \{lcavol, lweight\}$
+\item $k = 3: \{lcavol, lweigth, svi\}$
+\item $k = 4: \{lcavol, lweight, lbph, svi\}$
+\item $k = 5: \{lcavol, lweight, age, lbph, svi\}$
+\item $k = 6: \{lcavol, lweight, age, lbph, svi, lcp\}$
+\item $k = 7: \{lcavol, lweight, age, lbph, svi, lcp, pgg45\}$
+\item $k = 8: \{lcavol, lweight, age, lbph, svi, lcp, gleason, pgg45\}$
+\end{itemize}
 
-
-
+\item Non
 
 
 \end{enumerate}
