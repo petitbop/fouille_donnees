@@ -197,6 +197,16 @@ D'après les résultats obtenus, les prédicteurs qui semblent influer le plus s
 
 \section{Sélection du meilleur sous-ensemble. Méthode «Best subscript selection»}
 
+\begin{enumerate}
+
+\item On ne peut se limiter à l'analyse du modèle en partie 2 car on garde tous les paramètres sans distinction. Il faudrait ne garder que les prédicteurs pertinents, qui ont une influence réelle sur lcavol. Certains prédicteurs ne servent qu'à approcher le bruit dans l'échantillon, ce qui permet effectivement de se rapprocher des données, mais cela dégrade la qualité des prédictions. On parle alors d'overfitting.
+
+Autrement dit, le problème majeur est que le critère RSS est insuffisant : plus on a de prédicteurs, meilleure la régression est jugée. Or, les prédictions peuvent se détériorer lorsqu'on utilise des prédicteurs superflus qui ne servent qu'à approcher le bruit.
+
+
+
+\end{enumerate}
+
 \end{document}
 
 % TODO : parler du scrum master
