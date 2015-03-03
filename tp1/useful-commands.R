@@ -28,7 +28,6 @@ X <- mylm$residuals
 sum(X*X)
 # 41.81094
 
-
 4)a)
 # overfitting, plus on rajoute de données, plus on fit les points mais ce n'est pas satisfaisant car on prédit mal de nouvelles données
 lm(lpsa~1,data=pro) # approxime par la moyenne
@@ -45,6 +44,49 @@ for(i in 1:length(A[1,])) {
     mylm <- lm(lpsa~., data = pro[,c(A[1,i], A[2,i], 9)])
     res <- mylm$residuals
     print(sum(res*res))
+}
+
+best.rss <- function(k){
+  if(k == 0){
+    reg= lm(lpsa~1,data=pro)
+    res = reg$residuals
+    rss = sum(res*res)
+    return(c(rss,c()))
+  }
+  
+  min.rss = -1
+  pred.id = combn(1:8,k)
+  n = length(pred.id[1,])
+  for(i in 1:n){
+    var.id = 9
+    reg = lm(lpsa~.,data=pro[,c(pred.id[,i],var.id)])
+    res = reg$residuals
+    rss = sum(res*res)
+    if(i == 1){
+      min.rss = rss
+      best.pred = pred.id[,i]
+    } else {
+      if(rss < min.rss){
+        min.rss = rss
+        best.pred = pred.id[,i]
+      }
+    }
+  }
+  return(c(min.rss, c(best.pred)))
+}
+
+disp.best.rss <- function(){
+  rss <- seq(0,0,length.out=9)
+  for(k in 0:8){
+    rss[k+1] = best.rss(k)[1]
+  }
+    plot(0:8,rss,type="h")
+}
+
+disp.names <- function(){
+  for(k in 1:8){
+    print(names(pro)[best.rss(k)[2:(k+1)]])
+  }
 }
 
 5)a) 
