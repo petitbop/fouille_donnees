@@ -56,3 +56,17 @@ best.rss <- function(k){
   }
   return(c(min.rss, c(best.pred)))
 }
+
+disp.best.rss <- function(){
+  rss <- seq(0,0,length.out=9)
+  for(k in 0:8){
+    rss[k+1] = best.rss(k)[1]
+  }
+    plot(0:8,rss,type="h")
+}
+
+disp.names <- function(){
+  for(k in 1:8){
+    print(names(pro)[best.rss(k)[2:(k+1)]])
+  }
+}
