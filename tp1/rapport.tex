@@ -178,7 +178,7 @@ La régression classique consiste à estimer les coefficients $\beta_{j}$ interv
 
 $ Y_{i} = \sum\limits_{j=1}^6 \beta_{j} x_{ij} + \beta_{0} + \sum\limits_{l=2}^4 \beta_{gleason, l} \mathbf{1}_{x_{gleason, i}=l} + \epsilon_{i} $
 
-où $Y$ représente lpsa et les $x_{j}$ représente les prédicteurs.  
+où $Y$ représente lpsa et les $x_{j}$ représentent les prédicteurs.  
 
 D'après les résultats obtenus, les prédicteurs qui semblent influer le plus sur lpsa sont :
 \begin{itemize}
@@ -202,6 +202,18 @@ D'après les résultats obtenus, les prédicteurs qui semblent influer le plus s
 \item On ne peut se limiter à l'analyse du modèle en partie 2 car on garde tous les paramètres sans distinction. Il faudrait ne garder que les prédicteurs pertinents, qui ont une influence réelle sur lcavol. Certains prédicteurs ne servent qu'à approcher le bruit dans l'échantillon, ce qui permet effectivement de se rapprocher des données, mais cela dégrade la qualité des prédictions. On parle alors d'overfitting.
 
 Autrement dit, le problème majeur est que le critère RSS est insuffisant : plus on a de prédicteurs, meilleure la régression est jugée. Or, les prédictions peuvent se détériorer lorsqu'on utilise des prédicteurs superflus qui ne servent qu'à approcher le bruit.
+
+\item Pour chaque $k$ dans ${0, ..., 8}$, on fait varier le choix des prédicteurs afin de minimiser le RSS. La courbe des RSS ainsi obtenus vérifie bien la décroissance avec le nombre de prédicteurs. On observe un saut important à l'ajout du premier prédicteur (le RSS diminue de moitié), ce qui n'a rien d'étonnant : cela témoigne de l'intérêt de faire une régression. A l'ajout du deuxième puis du troisième prédicteur, le RSS diminue encore assez significativement, puis il reste presque inchangé au-delà.
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.7]{rss.pdf}
+\caption{Graphe des RSS en fonction du nombre de predicteurs}
+\end{center}
+\end{figure}
+
+
+
 
 
 
