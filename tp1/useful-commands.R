@@ -28,3 +28,24 @@ X <- mylm$residuals
 sum(X*X)
 # 41.81094
 
+best.rss <- function(k){
+  min.rss = -1
+  pred.id = combn(1:8,k)
+  n = length(pred.id[1,])
+  for(i in 1:n){
+    var.id = 9
+    reg = lm(lpsa~.,data=pro[,c(pred.id[,i],var.id)])
+    res = reg$residuals
+    rss = sum(res*res)
+    if(i == 1){
+      min.rss = rss
+      best.pred = pred.id[,i]
+    } else {
+      if(rss < min.rss){
+        min.rss = rss
+        best.pred = pred.id[,i]
+      }
+    }
+  }
+  return(c(min.rss, c(best.pred)))
+}
