@@ -29,6 +29,13 @@ sum(X*X)
 # 41.81094
 
 best.rss <- function(k){
+  if(k == 0){
+    reg= lm(lpsa~1,data=pro)
+    res = reg$residuals
+    rss = sum(res*res)
+    return(c(rss,c()))
+  }
+  
   min.rss = -1
   pred.id = combn(1:8,k)
   n = length(pred.id[1,])
