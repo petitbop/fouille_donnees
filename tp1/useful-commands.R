@@ -105,7 +105,8 @@ valid <- seq(from = 1, to = length(pro[,1]), by = 2)
 # 5)c)
 split.validation <- function(){
   best.subsets = get.names()
-  err.min = -1
+  # err.min = -1
+  err.tab = seq(0,0,length.out = 9)
   for(k in 0:8){
     # i = best.subsets[2,1]
     # j = best.subsets[2,2]
@@ -119,17 +120,26 @@ split.validation <- function(){
     y.pred = predict.lm(my.lm,pro[valid,])
     err.pred = y.pred - pro[valid,"lpsa"]
     err.pred.moy = mean(err.pred*err.pred)
-    if(k==0){
-      err.min = err.pred.moy
-      best.preds = preds
-    } else if(err.pred.moy < err.min) {
-      err.min = err.pred.moy
-      best.preds = preds
-    }
+#     if(k==0){
+#       err.min = err.pred.moy
+#       best.preds = preds
+#     } else if(err.pred.moy < err.min) {
+#       err.min = err.pred.moy
+#       best.preds = preds
+#     }
+    err.tab[k+1] = err.pred.moy
   }
-  return(c(err.min,best.preds))
+#  return(c(err.min,best.preds))
+  return(err.tab)
 }
-
+err.app = seq(0,0,length.out=9)
+for(k in 0:8){
+  err.app[k+1] = best.rss(k)[1]
+}
+err.pred = split.validation()
+dev.off()
+plot(0:8,err.app,col="blue")
+# plot(0:8,err.pred,col="red")
 
 # RSS
 
