@@ -25,7 +25,7 @@ pairs(~ lcp + lcavol + svi, data = pro, main = "Matrix")
 qt(0.999, 86) # 3.187722
 
 X <- mylm$residuals
-sum(X*X)
+# sum(X*X)
 # 41.81094
 
 # 4)a)
@@ -37,7 +37,7 @@ lm(lpsa~.,data=pro[,c(1,4,9)]) # équivalent à lm(lpsa~lcavol + lbph,data=pro) 
 lm(lpsa~.,data=pro[,c(2,7,9)]) # équivalent à lm(lpsa~lweight + gleason,data=pro) => approxime en fonction de lweigth et gleason
 
 X <- mylm$residuals
-sum(X*X)
+# sum(X*X)
 
 A <- combn(8, 2)
 for(i in 1:length(A[1,])) {
@@ -103,7 +103,7 @@ get.names <- function(){
 valid <- seq(from = 1, to = length(pro[,1]), by = 2) 
 
 # 5)c)
-split.validation <- function(){
+split.validation <- function(valid){
   best.subsets = get.names()
   err.tab = seq(0,0,length.out = 9)
   for(k in 0:8){
@@ -125,7 +125,25 @@ err.app = seq(0,0,length.out=9)
 for(k in 0:8){
   err.app[k+1] = best.rss(k)[1]
 }
-err.pred = split.validation()
+err.pred = split.validation(valid)
 dev.off()
-plot(0:8,err.app,col="blue")
+# plot(0:8,err.app,col="blue")
 # plot(0:8,err.pred,col="red")
+
+n=length(pro[1,])
+valid1 = sample(1:n,n/2)
+err.pred1 = split.validation(valid1)
+#print(err.pred1)
+#plot(0:8,err.pred1,col="red")
+
+m=30
+err.pred.mat = matrix(0,m,9)
+for(i in 1:m){
+  valid = sample(1:n,n/2)
+  err.pred.mat[i,] = split.validation(valid)
+}
+err.pred.moy = seq(0,0,length.out = 9)
+for(k in 0:8){
+  err.pred.moy[k+1] = mean(err.pred.mat[,k+1])
+}
+plot(0:8,err.pred.moy,col="red")
