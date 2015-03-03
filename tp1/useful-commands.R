@@ -28,7 +28,7 @@ X <- mylm$residuals
 sum(X*X)
 # 41.81094
 
-4)a)
+# 4)a)
 # overfitting, plus on rajoute de données, plus on fit les points mais ce n'est pas satisfaisant car on prédit mal de nouvelles données
 lm(lpsa~1,data=pro) # approxime par la moyenne
 
@@ -89,14 +89,48 @@ disp.names <- function(){
   }
 }
 
-5)a) 
+get.names <- function(){
+  best.subsets = matrix("", 8, 8)
+  for(k in 1:8)
+  best.subsets[k,1:k] = names(pro[best.rss(k)[2:(k+1)]])
+  return(best.subsets)
+}
+
+# 5)a) 
 # garder des donnees pour valider le modele (pour eviter l'overfitting)
 
-5)b)
+# 5)b)
 valid <- seq(from = 1, to = length(pro[,1]), by = 2) 
 
-5)c)
-lm(lpsa~.,data=pro[-valid,c(i,j,9)]) # utilise les colonnes i et j pour predire lpsa en retirant les lignes dont les indices donc dans valid 
-RSS
+# 5)c)
+split.validation <- function(){
+  best.subsets = get.names()
+  err.min = -1
+  for(k in 0:8){
+    # i = best.subsets[2,1]
+    # j = best.subsets[2,2]
+    if(k == 0){
+      preds = c()
+      my.lm = lm(lpsa~1, data=pro[-valid,])
+    } else {
+      preds = best.subsets[k,1:k]
+      my.lm = lm(lpsa~.,data=pro[-valid,c(preds,"lpsa")]) # utilise les colonnes i et j pour predire lpsa en retirant les lignes dont les indices donc dans valid   
+    }
+    y.pred = predict.lm(my.lm,pro[valid,])
+    err.pred = y.pred - pro[valid,"lpsa"]
+    err.pred.moy = mean(err.pred*err.pred)
+    if(k==0){
+      err.min = err.pred.moy
+      best.preds = preds
+    } else if(err.pred.moy < err.min) {
+      err.min = err.pred.moy
+      best.preds = preds
+    }
+  }
+  return(c(err.min,best.preds))
+}
 
-5)d)
+
+# RSS
+
+# 5)d)
