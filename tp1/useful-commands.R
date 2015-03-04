@@ -46,6 +46,10 @@ for(i in 1:length(A[1,])) {
 #   print(sum(res*res))
 }
 
+
+
+# 4.b)
+
 best.rss <- function(k){
   if(k == 0){
     reg= lm(lpsa~1,data=pro)
@@ -109,6 +113,7 @@ lm2 = lm(lpsa~.,data=pro[-valid,c(i,j,9)]) # utilise les colonnes i et j pour pr
 res = lm2$residuals
 training.error = mean(res * res)
 
+# 5)d)
 split.validation <- function(valid){
   best.subsets = get.names()
   err.tab = seq(0,0,length.out = 9)
@@ -135,25 +140,6 @@ best.rss.moy <- function(k, valid){
     rss = mean(res*res)
     return(c(rss,c()))
   }
-  
-  #   min.rss = -1
-  #   pred.id = combn(1:8,k)
-  #   n = length(pred.id[1,])
-  #   for(i in 1:n){
-  #     var.id = 9
-  #     reg = lm(lpsa~.,data=pro[-valid,c(pred.id[,i],var.id)])
-  #     res = reg$residuals
-  #     rss = mean(res*res)
-  #     if(i == 1){
-  #       min.rss = rss
-  #       best.pred = pred.id[,i]
-  #     } else {
-  #       if(rss < min.rss){
-  #         min.rss = rss
-  #         best.pred = pred.id[,i]
-  #       }
-  #     }
-  #   }
   best = best.rss(k)
   best.preds = best[2:(k+1)]
   reg = lm(lpsa~.,data=pro[-valid,c(best.preds,var.id)])
@@ -163,18 +149,17 @@ best.rss.moy <- function(k, valid){
   return(c(err.app.moy, c(best.preds)))
 }
 
-
+# 5)e)
 err.app = seq(0,0,length.out=9)
 for(k in 0:8){
   err.app[k+1] = best.rss.moy(k,valid)[1]
 }
 err.pred = split.validation(valid)
 dev.off()
-plot(0:8,err.app,col="blue",xlab="Nombre de prédicteurs", ylab="RSS")
-points(0:8,err.pred,col="red")
 library(lattice)
 xyplot(err.app + err.pred ~ 0:8, col = c("blue","red"), xlab="Nombre de prédicteurs",ylab="Erreurs moyennes")
 
+# 5)f)
 n=length(pro[,1])
 valid1 = sample(1:n,n/2)
 err.app1 = seq(0,0,length.out=9)
@@ -183,11 +168,10 @@ for(k in 0:8){
 }
 err.pred1 = split.validation(valid1)
 #print(err.pred1)
-plot(0:8,err.pred1,col="red",xlab="Nombre de prédicteurs", ylab="Erreur de prédiction moyenne")
 xyplot(err.app1 + err.pred1 ~ 0:8, col = c("blue","red"), xlab="Nombre de prédicteurs",ylab="Erreurs moyennes")
 
 
-
+# 5)g)
 m=30
 err.pred.mat = matrix(0,m,9)
 err.app.mat = matrix(0,m,9)
@@ -204,5 +188,7 @@ for(k in 0:8){
   err.pred.moy[k+1] = mean(err.pred.mat[,k+1])
   err.app.moy[k+1] = mean(err.app.mat[,k+1])  
 }
-plot(0:8,err.pred.moy,col="red")
 xyplot(err.app.moy + err.pred.moy ~ 0:8, col = c("blue","red"), xlab="Nombre de prédicteurs",ylab="Erreurs moyennes")
+
+lm.best = lm(lpsa~.,data=pro[,c("lcavol","lweight","svi","lpsa")]) # utilise les colonnes i et j pour predire lpsa en retirant les lignes dont les indices donc dans valid   
+#summary(lm.best)

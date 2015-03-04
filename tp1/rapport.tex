@@ -220,12 +220,13 @@ Comme on veut passer du seuil ** au seuil ***, on cherche donc $x$ tel que P(|t|
 
 Et on trouve que pour $t=3.187722$ on passe du seuil ** au seuil ***. Cette valeur est cohérente pour lcavol et l'intercept.
 
-\item[2.d)]
+\item[2.d)] $RSS = 41.8$ 
 
 \end{enumerate}
 
 \section{Effet des prédicteurs quantitatifs}
 
+Svi et gleason semblent avoir un effet sur lpsa, au sens où selon les classes distinctes de svi et gleason, des tendances se dégagent. Autrement dit, les moyennes empiriques de lpsa selon les classes présentent des différences significatives, ce qui laisse à penser qu'il en est de même pour les espérances conditionnelles de lpsa.
 
 
 \section{Sélection du meilleur sous-ensemble. Méthode «Best subscript selection»}
@@ -246,7 +247,7 @@ Autrement dit, le problème majeur est que le critère RSS est insuffisant : plu
 \end{center}
 \end{figure}
 
-On indique ci-dessous les sous-ensembles de prédicteurs qui réalisent le minimum de RSS, à nombre $k$ de prédicteurs fixé :
+On indique ci-dessous les sous-ensembles de prédicteurs qui réalisent le minimum de RSS, à nombre de prédicteurs $k$ fixé :
 \begin{itemize}
 \item $k = 0: \emptyset$
 \item $k = 1: \{lcavol\}$
@@ -289,6 +290,24 @@ L'erreur d'apprentissage moyenne pour ce modèle est $0.503$. A noter que l'erre
 
 \item[5.g)] Pour éviter ce problème, nous proposons d'itérer un nombre donné de fois (30 dans notre script) l'algorithme de split-validation avec séparation aléatoire de l'échantillon en deux moitiés de même taille. On récupère alors pour chaque itération les erreurs d'apprentissage et de prédiction moyennes. On calcule alors la moyenne de ces erreurs, et on se base sur ces résultats pour tirer des conclusions quant au choix du modèle. Les variations d'une itération à l'autre sont ainsi gommées. Avec cette méthode, on obtient que le meilleur modèle est celui avec 3 prédicteurs (cf figure 5).
 
+
+
+\end{enumerate}
+
+
+\section{Conclusion}
+
+D'après notre analyse, le meilleur modèle prédictif pour lpsa est le modèle de régression à 3 prédicteurs $\{lcavol, lweigth, svi\}$. 
+Chacun de ces prédicteurs est corrélé positivement avec lpsa avec une probabilité d'erreur très faible (On note $P_{e}$ cette probabilité d'erreur).
+
+Attardons-nous sur chacun de ces prédicteurs :
+
+\begin{description}
+\item[lcavol :] log volume de cancer. Corrélation très sûre ($P_e = 3.49*10^{-10}$) avec lpsa. Ce résultat confirme le fait que les cellules prostatiques cancéreuses sécrètent dix fois plus de lpsa que les cellules normales.
+\item[lweight :] log poids de la prostate. Corrélation très sûre ($P_e = 0.0289 \%$) avec lpsa. Ce résultat est cohérent lui aussi : étant donné que toutes les cellules prostatiques (cancéreuses ou non) sécrètent du lpsa, une prostate plus lourde signifie plus de cellules prostatiques, donc plus de sécrétions de lpsa.
+\item[svi :] invasion de la vésicule séminale. Corrélation sûre ($P_e = 0.180 \%$). La quantité de cellules cancéreuses dans la vésicule séminale semblent être corrélée positivement à la sécrétion de lpsa. On peut conjecturer que $svi = f(cavol)$, où cavol est le volume de cancer, et f est une fonction non logarithmique. Svi apparaîtrait alors comme un prédicteur supplémentaire qui permet d'affiner l'interpolation, mais surtout d'améliorer les prédictions.
+\end{description}
+
 \begin{figure}
 \begin{center}
 \includegraphics[scale=1]{erreurs_moy.pdf}
@@ -309,23 +328,6 @@ L'erreur d'apprentissage moyenne pour ce modèle est $0.503$. A noter que l'erre
 \caption{Tracé des erreurs d'apprentissage (en bleu) et de prédiction (en rouge) moyennes sur 30 itérations avec séparation aléatoire}
 \end{center}
 \end{figure}
-
-\end{enumerate}
-
-
-\section{Conclusion}
-
-D'après notre analyse, le meilleur modèle prédictif pour lpsa est le modèle de régression à 3 prédicteurs $\{lcavol, lweigth, svi\}$. 
-Chacun de ces prédicteurs est corrélé positivement avec lpsa avec une probabilité d'erreur très faible (On note $P_{e}$ cette probabilité d'erreur).
-
-Attardons-nous sur chacun de ces prédicteurs :
-
-\begin{description}
-\item[lcavol :] log volume de cancer. Corrélation très sûre ($P_e = 3.49*10^{-10}$) avec lpsa. Ce résultat confirme le fait que les cellules prostatiques cancéreuses sécrètent dix fois plus de lpsa que les cellules normales.
-\item[lweight :] log poids de la prostate. Corrélation très sûre ($P_e = 0.0289 \%$) avec lpsa. Ce résultat est cohérent lui aussi : étant donné que toutes les cellules prostatiques (cancéreuses ou non) sécrètent du lpsa, une prostate plus lourde signifie plus de cellules prostatiques, donc plus de sécrétions de lpsa.
-\item[svi :] invasion de la vésicule séminale. Corrélation sûre ($P_e = 0.180 \%$). La quantité de cellules cancéreuses dans la vésicule séminale semblent être corrélée positivement à la sécrétion de lpsa. On peut conjecturer que $svi = f(cavol)$, où cavol est le volume de cancer, et f est une fonction non logarithmique. Svi apparaîtrait alors comme un prédicteur supplémentaire qui permet d'affiner l'interpolation, mais surtout d'améliorer les prédictions.
-\end{description}
-
 
 \end{document}
 
