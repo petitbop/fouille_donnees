@@ -171,22 +171,38 @@ for(k in 0:8){
 err.pred = split.validation(valid)
 dev.off()
 plot(0:8,err.app,col="blue",xlab="Nombre de prédicteurs", ylab="RSS")
-#points(0:8,err.pred,col="red")
+points(0:8,err.pred,col="red")
+library(lattice)
+xyplot(err.app + err.pred ~ 0:8, col = c("blue","red"), xlab="Nombre de prédicteurs",ylab="Erreurs moyennes")
 
 n=length(pro[,1])
 valid1 = sample(1:n,n/2)
+err.app1 = seq(0,0,length.out=9)
+for(k in 0:8){
+  err.app1[k+1] = best.rss.moy(k,valid1)[1]
+}
 err.pred1 = split.validation(valid1)
 #print(err.pred1)
-#plot(0:8,err.pred1,col="red")
+plot(0:8,err.pred1,col="red",xlab="Nombre de prédicteurs", ylab="Erreur de prédiction moyenne")
+xyplot(err.app1 + err.pred1 ~ 0:8, col = c("blue","red"), xlab="Nombre de prédicteurs",ylab="Erreurs moyennes")
+
+
 
 m=30
 err.pred.mat = matrix(0,m,9)
+err.app.mat = matrix(0,m,9)
 for(i in 1:m){
   valid = sample(1:n,n/2)
   err.pred.mat[i,] = split.validation(valid)
+  for(k in 0:8){
+    err.app.mat[i,k+1] = best.rss.moy(k,valid)[1]
+  }
 }
 err.pred.moy = seq(0,0,length.out = 9)
+err.app.moy = seq(0,0,length.out=9)
 for(k in 0:8){
   err.pred.moy[k+1] = mean(err.pred.mat[,k+1])
+  err.app.moy[k+1] = mean(err.app.mat[,k+1])  
 }
 plot(0:8,err.pred.moy,col="red")
+xyplot(err.app.moy + err.pred.moy ~ 0:8, col = c("blue","red"), xlab="Nombre de prédicteurs",ylab="Erreurs moyennes")

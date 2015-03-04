@@ -252,7 +252,37 @@ L'erreur d'apprentissage moyenne pour ce modèle est $0.503$. A noter que l'erre
 
 \item L'erreur de prédiction moyenne est $0.575$. On peut observer qu'elle est du même ordre de grandeur que l'erreur d'apprentissage moyenne.
 
+\item En se basant sur cette unique split-validation, nous prendrions le modèle avec 2 prédicteurs. En effet, il s'agit du modèle qui minimise l'erreur de prédiction (cf. figure 3), qui est à nos yeux le critère essentiel pour juger d'un modèle de régression. Les deux prédicteurs retenus sont lcavol et lweight.
+
+\item Le principal problème de la méthode de split-validation est la séparation arbitraire de l'échantillon en un ensemble d'apprentissage et un ensemble de test. Les résultats de la split-validation sont sensibles à cette séparation. En optant pour une séparation aléatoire des échantillons, la split-validation indique cette fois-ci qu'il faudrait prendre le modèle avec 3 prédicteurs car c'est à présent celui qui minimise l'erreur de prédiction (cf. figure 4).
+
+\item Pour éviter ce problème, nous proposons d'itérer un nombre donné de fois (30 dans notre script) l'algorithme de split-validation avec séparation aléatoire de l'échantillon en deux moitiés de même taille. On récupère alors pour chaque itération les erreurs d'apprentissage et de prédiction moyennes. On calcule alors la moyenne de ces erreurs, et on se base sur ces résultats pour tirer des conclusions quant au choix du modèle. Les variations d'une itération à l'autre sont ainsi gommées. Avec cette méthode, on obtient que le meilleur modèle est celui avec 3 prédicteurs (cf figure 5).
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.7]{erreurs_moy.pdf}
+\caption{Tracé des erreurs d'apprentissage (en bleu) et de prédiction (en rouge) moyennes en fonction du nombre de prédicteurs}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.7]{erreurs_moy_autre.pdf}
+\caption{Tracé des erreurs d'apprentissage (en bleu) et de prédiction (en rouge) moyennes pour une séparation aléatoire de l'échantillon}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.7]{erreurs_moy_moy.pdf}
+\caption{Tracé des erreurs d'apprentissage (en bleu) et de prédiction (en rouge) moyennes sur 30 itérations avec séparation aléatoire}
+\end{center}
+\end{figure}
+
 \end{enumerate}
+
+
+\section{Conclusion}
 
 
 
