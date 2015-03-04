@@ -185,37 +185,10 @@ D'après les résultats obtenus, les prédicteurs qui semblent influer le plus s
 \item lcavol (***) : on prend un risque très faible (p-valeur $=2.9x10^{-8}\%$) en disant que $\beta_{lcavol} \neq 0$.
 \item lweight (**) : p-valeur $=0.25\%$.
 \item svi (**) : p-valeur $=0.31\%$.
-\end{itemize}
-On prend également peu de risque en disant que $\beta_{lweight} \neq 0$ et $\beta_{svi} \neq 0$ 
-\begin{itemize}
 \item age (*) : p-valeur $=4.4\%$.
 \end{itemize}
 
-\item La p-valeur correspondant à la variable lcp est très élevée ($19\%$), donc l'estimation de $\beta_{lcp}$ est peu précise. C'est pourquoi il est préférable de calculer un intervale de confiance pour $\beta_{lcp}$.
 
-L'intervalle de confiance au seuil de $1\%$ trouvé est $[-0.52, 0.17]$. Cet intervalle recouvre à la fois des valeurs négatives et positives, donc ce qui confirme le manque de précision dans l'estimation du $\beta_{lcp}$ puisqu'on est même pas sûre de son signe.
-
-Si on décide d'ignorer lcavol et svi, on trouve un nouvel intervalle de confiance qui est : $[0.10, 0.75]$. On remarque que la largeur de l'intervalle n'a pas changé. Par contre, l'intervalle s'est décalé par rapport au précédent. 
-
-On peut en déduire qu'il y a corrélation entre lcp et (lcavol, svi) : en effet, comme $\beta_{lcavol}$ et $\beta_{svi}$ estimés sont positifs, on se retrouve avec un nouvel intervalle décalé vers la droite. L'idée c'est qu'on peut factoriser lcavol et svi en lcp.
-
-\item La variable t (T statistic) suit une loi de Student($n-p-1$).
-
-n est le nombre d'individus ($=97$).
-
-p est le nombre de prédicteurs + 2 (car on fait factor(gleason)) ($=10$).
-
-n-p-1 est le degré de liberté (ici : $86$).
-
-On cherche pour quelle valeur de t on passe du seuil ** au seuil ***.
-
-La T statistic est la division de la valeur estimée d'un paramètre par son erreur standard. Elle mesure la probabilité que la vraie valeur du paramètre ne soit pas égale à $0$. Plus t est grand, moins il y a de chance pour que la vraie valeur du paramètre soit $0$.
-
-Comme on veut passer du seuil ** au seuil ***, on cherche donc $x$ tel que P(|t|>x)=0.001.
-
-Et on trouve que pour $t=3.187722$ on passe du seuil ** au seuil ***. Cette valeur est cohérente pour lcavol et l'intercept.
-
-\item
 
 
 \end{enumerate}
