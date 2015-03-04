@@ -195,6 +195,8 @@ D'après les résultats obtenus, les prédicteurs qui semblent influer le plus s
 
 \section{Effet des prédicteurs quantitatifs}
 
+
+
 \section{Sélection du meilleur sous-ensemble. Méthode «Best subscript selection»}
 
 \begin{enumerate}
@@ -225,10 +227,34 @@ On indique ci-dessous les sous-ensembles de prédicteurs qui réalisent le minim
 \item $k = 8: \{lcavol, lweight, age, lbph, svi, lcp, gleason, pgg45\}$
 \end{itemize}
 
-\item Non
-
+\item Cette méthode ne permet pas de sélectionner le meilleur modèle, toutes tailles confondues, il ne permet que de déterminer le modèle qui "colle" le plus aux données, le nombre de prédicteurs étant fixé. Le meilleur modèle n'est pas nécessairement celui qui considère le plus de prédicteurs. En particulier, on n'évalue toujours pas la qualité des prédictions, qui est le seul critère qui importe véritablement. L'objectif de la split-validation est justement de tenir compte de ce critère pour affiner le choix du modèle.
 
 \end{enumerate}
+
+
+\section{Split-validation}
+
+\begin{enumerate}
+
+\item La split-validation consiste à séparer les échantillons en deux sous-ensembles :
+
+\begin{itemize}
+\item Une partie pour effectuer différentes régressions (ensemble d'apprentissage)
+\item Une partie pour tester les différents modèles de régression possibles, et sélectionner celui qui produit les meilleures prédictions (ensemble de test)
+L'ensemble de test permet donc de comparer les valeurs prédites aux valeurs mesurées.
+\end{itemize}
+
+\item 
+
+\item Le meilleur modèle de taille 2 contient les prédicteurs $i = 1$ (lcavol) et $j = 2$ (lweight). lm(lpsa~.,data=pro[-valid,c(i,j,9)]) correspond au calcul de la régression sur l'ensemble d'apprentissage (-valid), en s'intéressant uniquement aux prédicteurs lcavol et lweight.
+
+L'erreur d'apprentissage moyenne pour ce modèle est $0.503$. A noter que l'erreur est prise au sens des moindres carrés.
+
+\item L'erreur de prédiction moyenne est $0.575$. On peut observer qu'elle est du même ordre de grandeur que l'erreur d'apprentissage moyenne.
+
+\end{enumerate}
+
+
 
 \end{document}
 
