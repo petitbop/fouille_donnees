@@ -56,12 +56,13 @@
 \section{Analyse préliminaires des données}
 
 \begin{enumerate}
+\setlength{\itemsep}{20pt}
 
-\item On visualise sous R la matrice de corrélation entre lpsa et les 8 prédicteurs (figure 1). 
+\item[1.a)] On visualise sous R la matrice de corrélation entre lpsa et les 8 prédicteurs (figure 1). 
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.7]{pairs_pro.pdf}
+\includegraphics[scale=1]{pairs_pro.pdf}
 \caption{Graphes d'intercorrélation de lcavol et des prédicteurs}
 \end{center}
 \end{figure}
@@ -85,10 +86,10 @@
        corrélé \\
   \hline 
 \end{tabular}
+\\\\\\
 
 
-
-\item 
+\item[1.b)] 
 À partir du graphe figure 1, on peut aussi conjecturer s'il y a corrélation entre les prédicteurs.
 
 \begin{tabular}{|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|}
@@ -167,7 +168,7 @@
     \hline
 
 \end{tabular}
-
+\\\\
 \end{enumerate}
 
 
@@ -175,7 +176,8 @@
 \section{Régression linéaire. Méthodes des moindres carrés.}
 
 \begin{enumerate}
-\item
+\setlength{\itemsep}{20pt}
+\item[2.a)]
 La régression classique consiste à estimer les coefficients $\beta_{j}$ intervenant dans la relation suivante :
 
 $ Y_{i} = \sum\limits_{j=1}^6 \beta_{j} x_{ij} + \beta_{0} + \sum\limits_{l=2}^4 \beta_{gleason, l} \mathbf{1}_{x_{gleason, i}=l} + \epsilon_{i} $
@@ -202,16 +204,17 @@ D'après les résultats obtenus, les prédicteurs qui semblent influer le plus s
 \section{Sélection du meilleur sous-ensemble. Méthode «Best subscript selection»}
 
 \begin{enumerate}
+\setlength{\itemsep}{12pt}
 
-\item On ne peut se limiter à l'analyse du modèle en partie 2 car on garde tous les paramètres sans distinction. Il faudrait ne garder que les prédicteurs pertinents, qui ont une influence réelle sur lcavol. Certains prédicteurs ne servent qu'à approcher le bruit dans l'échantillon, ce qui permet effectivement de se rapprocher des données, mais cela dégrade la qualité des prédictions. On parle alors d'overfitting.
+\item[4.a)] On ne peut se limiter à l'analyse du modèle en partie 2 car on garde tous les paramètres sans distinction. Il faudrait ne garder que les prédicteurs pertinents, qui ont une influence réelle sur lcavol. Certains prédicteurs ne servent qu'à approcher le bruit dans l'échantillon, ce qui permet effectivement de se rapprocher des données, mais cela dégrade la qualité des prédictions. On parle alors d'overfitting.
 
 Autrement dit, le problème majeur est que le critère RSS est insuffisant : plus on a de prédicteurs, meilleure la régression est jugée. Or, les prédictions peuvent se détériorer lorsqu'on utilise des prédicteurs superflus qui ne servent qu'à approcher le bruit.
 
-\item Pour chaque $k$ dans $\{0, ..., 8\}$, on fait varier le choix des prédicteurs afin de minimiser le RSS. La courbe des RSS ainsi obtenus vérifie bien la décroissance avec le nombre de prédicteurs. On observe un saut important à l'ajout du premier prédicteur (le RSS diminue de moitié), ce qui n'a rien d'étonnant : cela témoigne de l'intérêt de faire une régression. A l'ajout du deuxième puis du troisième prédicteur, le RSS diminue encore assez significativement, puis il reste presque inchangé au-delà.
+\item[4.b)] Pour chaque $k$ dans $\{0, ..., 8\}$, on fait varier le choix des prédicteurs afin de minimiser le RSS. La courbe des RSS ainsi obtenus vérifie bien la décroissance avec le nombre de prédicteurs. On observe un saut important à l'ajout du premier prédicteur (le RSS diminue de moitié), ce qui n'a rien d'étonnant : cela témoigne de l'intérêt de faire une régression. A l'ajout du deuxième puis du troisième prédicteur, le RSS diminue encore assez significativement, puis il reste presque inchangé au-delà.
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.7]{rss.pdf}
+\includegraphics[scale=1]{rss.pdf}
 \caption{Graphe des RSS en fonction du nombre de prédicteurs}
 \end{center}
 \end{figure}
@@ -229,7 +232,7 @@ On indique ci-dessous les sous-ensembles de prédicteurs qui réalisent le minim
 \item $k = 8: \{lcavol, lweight, age, lbph, svi, lcp, gleason, pgg45\}$
 \end{itemize}
 
-\item Cette méthode ne permet pas de sélectionner le meilleur modèle, toutes tailles confondues, il ne permet que de déterminer le modèle qui "colle" le plus aux données, le nombre de prédicteurs étant fixé. Le meilleur modèle n'est pas nécessairement celui qui considère le plus de prédicteurs. En particulier, on n'évalue toujours pas la qualité des prédictions, qui est le seul critère qui importe véritablement. L'objectif de la split-validation est justement de tenir compte de ce critère pour affiner le choix du modèle.
+\item[4.c)] Cette méthode ne permet pas de sélectionner le meilleur modèle, toutes tailles confondues, il ne permet que de déterminer le modèle qui "colle" le plus aux données, le nombre de prédicteurs étant fixé. Le meilleur modèle n'est pas nécessairement celui qui considère le plus de prédicteurs. En particulier, on n'évalue toujours pas la qualité des prédictions, qui est le seul critère qui importe véritablement. L'objectif de la split-validation est justement de tenir compte de ce critère pour affiner le choix du modèle.
 
 \end{enumerate}
 
@@ -237,8 +240,9 @@ On indique ci-dessous les sous-ensembles de prédicteurs qui réalisent le minim
 \section{Split-validation}
 
 \begin{enumerate}
+\setlength{\itemsep}{20pt}
 
-\item La split-validation consiste à séparer les échantillons en deux sous-ensembles :
+\item[5.a)] La split-validation consiste à séparer les échantillons en deux sous-ensembles :
 
 \begin{itemize}
 \item Une partie pour effectuer différentes régressions (ensemble d'apprentissage)
@@ -246,37 +250,35 @@ On indique ci-dessous les sous-ensembles de prédicteurs qui réalisent le minim
 L'ensemble de test permet donc de comparer les valeurs prédites aux valeurs mesurées.
 \end{itemize}
 
-\item 
-
-\item Le meilleur modèle de taille 2 contient les prédicteurs $i = 1$ (lcavol) et $j = 2$ (lweight). lm(lpsa~.,data=pro[-valid,c(i,j,9)]) correspond au calcul de la régression sur l'ensemble d'apprentissage (-valid), en s'intéressant uniquement aux prédicteurs lcavol et lweight.
+\item[5.c)] Le meilleur modèle de taille 2 contient les prédicteurs $i = 1$ (lcavol) et $j = 2$ (lweight). lm(lpsa~.,data=pro[-valid,c(i,j,9)]) correspond au calcul de la régression sur l'ensemble d'apprentissage (-valid), en s'intéressant uniquement aux prédicteurs lcavol et lweight.
 
 L'erreur d'apprentissage moyenne pour ce modèle est $0.503$. A noter que l'erreur est prise au sens des moindres carrés.
 
-\item L'erreur de prédiction moyenne est $0.575$. On peut observer qu'elle est du même ordre de grandeur que l'erreur d'apprentissage moyenne.
+\item[5.d)] L'erreur de prédiction moyenne est $0.575$. On peut observer qu'elle est du même ordre de grandeur que l'erreur d'apprentissage moyenne.
 
-\item En se basant sur cette unique split-validation, nous prendrions le modèle avec 2 prédicteurs. En effet, il s'agit du modèle qui minimise l'erreur de prédiction (cf. figure 3), qui est à nos yeux le critère essentiel pour juger d'un modèle de régression. Les deux prédicteurs retenus sont lcavol et lweight.
+\item[5.e)] En se basant sur cette unique split-validation, nous prendrions le modèle avec 2 prédicteurs. En effet, il s'agit du modèle qui minimise l'erreur de prédiction (cf. figure 3), qui est à nos yeux le critère essentiel pour juger d'un modèle de régression. Les deux prédicteurs retenus sont lcavol et lweight.
 
-\item Le principal problème de la méthode de split-validation est la séparation arbitraire de l'échantillon en un ensemble d'apprentissage et un ensemble de test. Les résultats de la split-validation sont sensibles à cette séparation. En optant pour une séparation aléatoire des échantillons, la split-validation indique cette fois-ci qu'il faudrait prendre le modèle avec 3 prédicteurs car c'est à présent celui qui minimise l'erreur de prédiction (cf. figure 4).
+\item[5.f)] Le principal problème de la méthode de split-validation est la séparation arbitraire de l'échantillon en un ensemble d'apprentissage et un ensemble de test. Les résultats de la split-validation sont sensibles à cette séparation. En optant pour une séparation aléatoire des échantillons, la split-validation indique cette fois-ci qu'il faudrait prendre le modèle avec 3 prédicteurs car c'est à présent celui qui minimise l'erreur de prédiction (cf. figure 4).
 
-\item Pour éviter ce problème, nous proposons d'itérer un nombre donné de fois (30 dans notre script) l'algorithme de split-validation avec séparation aléatoire de l'échantillon en deux moitiés de même taille. On récupère alors pour chaque itération les erreurs d'apprentissage et de prédiction moyennes. On calcule alors la moyenne de ces erreurs, et on se base sur ces résultats pour tirer des conclusions quant au choix du modèle. Les variations d'une itération à l'autre sont ainsi gommées. Avec cette méthode, on obtient que le meilleur modèle est celui avec 3 prédicteurs (cf figure 5).
+\item[5.g)] Pour éviter ce problème, nous proposons d'itérer un nombre donné de fois (30 dans notre script) l'algorithme de split-validation avec séparation aléatoire de l'échantillon en deux moitiés de même taille. On récupère alors pour chaque itération les erreurs d'apprentissage et de prédiction moyennes. On calcule alors la moyenne de ces erreurs, et on se base sur ces résultats pour tirer des conclusions quant au choix du modèle. Les variations d'une itération à l'autre sont ainsi gommées. Avec cette méthode, on obtient que le meilleur modèle est celui avec 3 prédicteurs (cf figure 5).
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.7]{erreurs_moy.pdf}
+\includegraphics[scale=1]{erreurs_moy.pdf}
 \caption{Tracé des erreurs d'apprentissage (en bleu) et de prédiction (en rouge) moyennes en fonction du nombre de prédicteurs}
 \end{center}
 \end{figure}
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.7]{erreurs_moy_autre.pdf}
+\includegraphics[scale=1]{erreurs_moy_autre.pdf}
 \caption{Tracé des erreurs d'apprentissage (en bleu) et de prédiction (en rouge) moyennes pour une séparation aléatoire de l'échantillon}
 \end{center}
 \end{figure}
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.7]{erreurs_moy_moy.pdf}
+\includegraphics[scale=1]{erreurs_moy_moy.pdf}
 \caption{Tracé des erreurs d'apprentissage (en bleu) et de prédiction (en rouge) moyennes sur 30 itérations avec séparation aléatoire}
 \end{center}
 \end{figure}
