@@ -57,15 +57,16 @@
 
 \begin{enumerate}
 
-\item On visualise sous R la matrice de corrélation entre lpsa et les 8 prédicteurs. 
+\item On visualise sous R la matrice de corrélation entre lpsa et les 8 prédicteurs (figure 1). 
 
+\begin{figure}
 \begin{center}
-\includegraphics[scale=0.5]{Rplots.pdf}
-\captionof{figure}{Rplots}
-\label{fig1}
+\includegraphics[scale=0.7]{pairs_pro.pdf}
+\caption{Graphes d'intercorrélation de lcavol et des prédicteurs}
 \end{center}
+\end{figure}
 
-À partir du graphe précédent, on peut voir que certains facteurs sont corrélés ou pas avec lpsa. Pour cela, il suffit de regarder si le nuages de points forme plus ou moins une ellipse. 
+À partir du graphe figure 1, on peut voir que certains facteurs sont corrélés ou pas avec lpsa. Pour cela, il suffit de regarder si le nuages de points forme plus ou moins une ellipse. 
 
 \begin{tabular}{|p{0.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
   \hline
@@ -86,8 +87,9 @@
 \end{tabular}
 
 
+
 \item 
-À partir du graphe précédent, on peut aussi conjecturer s'il y a corrélation entre les prédicteurs.
+À partir du graphe figure 1, on peut aussi conjecturer s'il y a corrélation entre les prédicteurs.
 
 \begin{tabular}{|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|}
   \hline
@@ -284,6 +286,16 @@ L'erreur d'apprentissage moyenne pour ce modèle est $0.503$. A noter que l'erre
 
 \section{Conclusion}
 
+D'après notre analyse, le meilleur modèle prédictif pour lpsa est le modèle de régression à 3 prédicteurs $\{lcavol, lweigth, svi\}$. 
+Chacun de ces prédicteurs est corrélé positivement avec lpsa avec une probabilité d'erreur très faible (On note $P_{e}$ cette probabilité d'erreur).
+
+Attardons-nous sur chacun de ces prédicteurs :
+
+\begin{description}
+\item[lcavol :] log volume de cancer. Corrélation très sûre ($P_e = 3.49*10^{-10}$) avec lpsa. Ce résultat confirme le fait que les cellules prostatiques cancéreuses sécrètent dix fois plus de lpsa que les cellules normales.
+\item[lweight :] log poids de la prostate. Corrélation très sûre ($P_e = 0.0289 \%$) avec lpsa. Ce résultat est cohérent lui aussi : étant donné que toutes les cellules prostatiques (cancéreuses ou non) sécrètent du lpsa, une prostate plus lourde signifie plus de cellules prostatiques, donc plus de sécrétions de lpsa.
+\item[svi :] invasion de la vésicule séminale. Corrélation sûre ($P_e = 0.180 \%$). La quantité de cellules cancéreuses dans la vésicule séminale semblent être corrélée positivement à la sécrétion de lpsa. On peut conjecturer que $svi = f(cavol)$, où cavol est le volume de cancer, et f est une fonction non logarithmique. Svi apparaîtrait alors comme un prédicteur supplémentaire qui permet d'affiner l'interpolation, mais surtout d'améliorer les prédictions.
+\end{description}
 
 
 \end{document}
