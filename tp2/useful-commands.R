@@ -18,3 +18,6 @@ plot(coord[,c("long","lat")],pch=pch,col=colPalette,asp=1)
 legend("bottomleft",legend=names,col=colPalette,lty=-
 1,pch=pch,cex=.75,ncol=2,lwd=2)
 library(maps);map("world",add=T)
+
+# sauvegarder l'image avec Rstudio
+
