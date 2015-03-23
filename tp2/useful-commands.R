@@ -55,3 +55,6 @@ i = 3 # i peut aller de 1 à npop=27
 print(names[i])
 lines(pcaNAm2$x[which(NAm2[,3]==names[i]),caxes],type="p",col=colPalette[i],pch=pch[i])
 legend("top",legend=names,col=colPalette,lty=-1,pch=pch,cex=.75,ncol=3,lwd=2)
+
+# 3.c)
+summary(pcaNAm2) # donne pour tous => les deux premières composantes principales expliquent 3,57% de la variance totale
