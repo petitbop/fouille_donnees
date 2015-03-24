@@ -119,9 +119,73 @@ erreurs = rdist.earth(coordpred, vraiescoord, miles=F)
 erreur = erreur + sum(erreurs)
 compteur = compteur + length(erreurs)
 }
-print(compteur) # donne n=494 le nombre de marqueurs génétiques
+print(compteur) # donne n=494 le nombre de d'individus
 erreurmoy = erreur / compteur;
 # on obtient une erreur moyenne de 641.1188 km ; cohérent ???? (faire la division à la fin est il cohérent ? ou faut il diviser pour chaque population ?)
 # Rappel : Les dimensions des États-Unis continentaux sont gigantesques : 2 500 km du nord au sud, 4 500 km d’est en ouest.
 
+################################ 5.a)
+# Wikipedia : Dans la k-fold cross-validation, on divise l'échantillon original en k échantillons, puis on sélectionne un des k échantillons comme ensemble de validation et les (k-1) autres échantillons constitueront l'ensemble d'apprentissage. On calcule comme dans la première méthode l'erreur quadratique moyenne. Puis on répète l'opération en sélectionnant un autre échantillon de validation parmi les (k-1) échantillons qui n'ont pas encore été utilisés pour la validation du modèle. L'opération se répète ainsi k fois pour qu'en fin de compte chaque sous-échantillon ait été utilisé exactement une fois comme ensemble de validation. La moyenne des k erreurs quadratiques moyennes est enfin calculée pour estimer l'erreur de prédiction.
+
+# Rappel : n = 494 le nombre d'individus
+labels = rep(1:10,each=50)
+set = sample(labels,494)
+
+################################ 5.b)i.
+predictedCoord = matrix(nrow = 494, ncol = 2, dimnames = list(c(),c("longitude", "latitude")))
+
+################################ 5.b)ii.
+naxes = 4 # ATTENTION : pas sur d'avoir compris ce qu'était reellemnt naxes
+caxes=1:naxes
+k = 1 # le numéro du jeu de validation à écarter pour l'apprentissage
+pcalong=data.frame(cbind(long=NAm2[,c("long")],pcaNAm2$x[,caxes]))
+# on enlève donc de pcalong les données qui vont servir à la validation
+pcalonglearn = subset(pcalong, set[row(pcalong)[,1]] != k)
+lmlong4ACP <- lm(formula = long ~., data = pcalonglearn)
+summary(lmlong4ACP)
+# pareil pour la latitude
+pcalat=data.frame(cbind(lat=NAm2[,c("lat")],pcaNAm2$x[,caxes]))
+# on enlève donc de pcalat les données qui vont servir à la validation
+pcalatlearn = subset(pcalat, set[row(pcalat)[,1]] != k)
+lmlat4ACP <- lm(formula = lat ~., data = pcalatlearn)
+summary(lmlat4ACP)
+
+################################ 5.b)iii.
+# on prédit d'abord toutes les valeurs
+coordpredall = cbind(predict.lm(lmlong4ACP, pcalong),predict.lm(lmlat4ACP, pcalat))
+# on utilise ensuite que le jeu de validation numéro 1 pour commencer à remplir predictedCoord
+validationSet = which(set[row(pcalat)[,1]] == k)
+predictedCoord[validationSet,] = coordpredall[validationSet,]
+
+################################ 5.b)iv.
+# on complète avec les jeux de validation manquants
+for (k in 2:10) { # on fait maintenant varier le jeu de validation
+    # pcalong reste le meme
+    # on enlève donc de pcalong les données qui vont servir à la validation
+    pcalonglearn = subset(pcalong, set[row(pcalong)[,1]] != k)
+    lmlong4ACP <- lm(formula = long ~., data = pcalonglearn)
+    #summary(lmlong4ACP)
+    # pareil pour la latitude
+    pcalat=data.frame(cbind(lat=NAm2[,c("lat")],pcaNAm2$x[,caxes]))
+    # on enlève donc de pcalat les données qui vont servir à la validation
+    pcalatlearn = subset(pcalat, set[row(pcalat)[,1]] != k)
+    lmlat4ACP <- lm(formula = lat ~., data = pcalatlearn)
+    #summary(lmlat4ACP)
+    # on prédit d'abord toutes les valeurs
+    coordpredall = cbind(predict.lm(lmlong4ACP, pcalong),predict.lm(lmlat4ACP, pcalat))
+    # on utilise ensuite que le jeu de validation numéro 1 pour commencer à remplir predictedCoord
+    validationSet = which(set[row(pcalat)[,1]] == k)
+    predictedCoord[validationSet,] = coordpredall[validationSet,]
+}
+
+# regroupe les vraies coordonnées
+vraiescoord = NAm2[,8:7]
+# calcule les distances entre les coordonées prédites et la vraie
+library("fields")
+erreurs = matrix(nrow = 494, ncol = 1, dimnames = list(c(),c("erreur (distance)")))
+for (i in 1:494) {
+    onePredictedCoord = subset(predictedCoord, row(predictedCoord)[,1] == i) # au lieu d'utiliser simplement predictedCoord[i,]
+    erreurs[i,1] = rdist.earth(onePredictedCoord, vraiescoord[i,], miles=F) # sinon ne marche pas car nrow(predictedCoord[i,]) == NULL (wtf?)
+}
+print(sum(erreurs)) # il faut surement renvoyer autre chose que la somme brute
 
