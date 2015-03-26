@@ -114,13 +114,6 @@ erreurmoy = erreur / compteur;
 # on obtient une erreur moyenne de 641.1188 km ; cohérent ???? (faire la division à la fin est il cohérent ? ou faut il diviser pour chaque population ?)
 # Rappel : Les dimensions des États-Unis continentaux sont gigantesques : 2 500 km du nord au sud, 4 500 km d’est en ouest.
 
-coordpred = cbind(lmlong$fitted.values, lmlat$fitted.values)
-vraiescoord = NAm2[,8:7]
-erreurs = rdist.earth(coordpred, vraiescoord, miles=F)
-erreurmoy = mean(erreurs)
-print(erreurmoy)
-
-
 ################################ 5.a)
 # Wikipedia : Dans la k-fold cross-validation, on divise l'échantillon original en k échantillons, puis on sélectionne un des k échantillons comme ensemble de validation et les (k-1) autres échantillons constitueront l'ensemble d'apprentissage. On calcule comme dans la première méthode l'erreur quadratique moyenne. Puis on répète l'opération en sélectionnant un autre échantillon de validation parmi les (k-1) échantillons qui n'ont pas encore été utilisés pour la validation du modèle. L'opération se répète ainsi k fois pour qu'en fin de compte chaque sous-échantillon ait été utilisé exactement une fois comme ensemble de validation. La moyenne des k erreurs quadratiques moyennes est enfin calculée pour estimer l'erreur de prédiction.
 
