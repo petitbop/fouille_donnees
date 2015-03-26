@@ -13,10 +13,10 @@ coord=unique(NAm2[,c("Pop","long","lat")]) #coordinates for each pop
 colPalette=rep(c("black","red","cyan","orange","brown","blue","pink","purple","darkgreen"),3)
 pch=rep(c(16,15,25),each=9)
 pdf("map.pdf")
-plot(coord[,c("long","lat")],pch=pch,col=colPalette,asp=1)
+plot(coord[,c("long","lat")],pch=pch,col=colPalette,asp=1, cex=0.7)
 # asp permet d'avoir le rapport correct entre les axes longitude et latitude
 # ainsi la carte n'est pas déformée
-legend("bottomleft",legend=names,col=colPalette,lty=-1,pch=pch,cex=.75,ncol=2,lwd=2)
+legend("bottomleft",legend=names,col=colPalette,lty=-1,pch=pch,cex=.60,ncol=2,lwd=2)
 library(maps);map("world",add=T)
 dev.off()
 
@@ -79,28 +79,14 @@ summary(lmlat) # la premiere composante principale "n'est pas bien représenté"
 
 
 ################################ 4.b)
+pdf("map_acp.pdf")
 plot(lmlong$fitted.values,lmlat$fitted.values,col="white",xlim = c(-140,-20),ylim=c(-50,70)) # bornes rajoutées
 for (i in 1:npop) {
   print(names[i])
-  lines(lmlong$fitted.values[which(NAm2[,3]==names[i])],lmlat$fitted.values[which(NAm2[,3]==names[i])],type="p",col=colPalette[i],pch=pch[i])
+  lines(lmlong$fitted.values[which(NAm2[,3]==names[i])],lmlat$fitted.values[which(NAm2[,3]==names[i])],type="p",col=colPalette[i],pch=pch[i], cex=0.7)
 }
-legend("bottomleft",legend=names,col=colPalette,lty=-1,pch=pch,cex=.75,ncol=3,lwd=2)
+legend("bottomleft",legend=names,col=colPalette,lty=-1,pch=pch,cex=.55,ncol=3,lwd=2)
 map("world",add=T)
-
-# comparer avec la question 1.b)
-dev.new() # pour ouvrir une nouvelle fenetre courante
-names=unique(NAm2$Pop)
-npop=length(names)
-coord=unique(NAm2[,c("Pop","long","lat")]) #coordinates for each pop
-colPalette=rep(c("black","red","cyan","orange","brown","blue","pink","purple","darkgreen"),3)
-pch=rep(c(16,15,25),each=9)
-plot(coord[,c("long","lat")],pch=pch,col=colPalette,asp=1,xlim = c(-140,-20),ylim=c(-50,70)) # bornes rajoutées
-# asp permet d'avoir le rapport correct entre les axes longitude et latitude
-# ainsi la carte n'est pas déformée
-legend("bottomleft",legend=names,col=colPalette,lty=-
-         1,pch=pch,cex=.75,ncol=2,lwd=2)
-library(maps);map("world",add=T)
-
 dev.off() # pour fermer la fenêtre courante
 # j'ai l'impression qu'en faisant une sorte de barycentre, on arrive à retrouver la position géographique à partir des marqueurs génétiques
 
