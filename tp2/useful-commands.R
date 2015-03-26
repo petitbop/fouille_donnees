@@ -114,6 +114,13 @@ erreurmoy = erreur / compteur;
 # on obtient une erreur moyenne de 641.1188 km ; cohérent ???? (faire la division à la fin est il cohérent ? ou faut il diviser pour chaque population ?)
 # Rappel : Les dimensions des États-Unis continentaux sont gigantesques : 2 500 km du nord au sud, 4 500 km d’est en ouest.
 
+coordpred = cbind(lmlong$fitted.values, lmlat$fitted.values)
+vraiescoord = NAm2[,8:7]
+erreurs = rdist.earth(coordpred, vraiescoord, miles=F)
+erreurmoy = mean(erreurs)
+print(erreurmoy)
+
+
 ################################ 5.a)
 # Wikipedia : Dans la k-fold cross-validation, on divise l'échantillon original en k échantillons, puis on sélectionne un des k échantillons comme ensemble de validation et les (k-1) autres échantillons constitueront l'ensemble d'apprentissage. On calcule comme dans la première méthode l'erreur quadratique moyenne. Puis on répète l'opération en sélectionnant un autre échantillon de validation parmi les (k-1) échantillons qui n'ont pas encore été utilisés pour la validation du modèle. L'opération se répète ainsi k fois pour qu'en fin de compte chaque sous-échantillon ait été utilisé exactement une fois comme ensemble de validation. La moyenne des k erreurs quadratiques moyennes est enfin calculée pour estimer l'erreur de prédiction.
 
@@ -182,8 +189,11 @@ print(mean(erreurs))
 
 ################################ 5.c)
 testedNaxes = seq(2, 440, by=10)
-erreursMoy = vector("numeric",length(testedNaxes))
+erreursPredMoy = vector("numeric",length(testedNaxes))
+erreursRegMoy = vector("numeric",length(testedNaxes))
+library(fields)
 
+vraiescoord = NAm2[,8:7]
 for(l in 1:length(testedNaxes)){
 
   naxes = testedNaxes[l]
@@ -206,19 +216,36 @@ for(l in 1:length(testedNaxes)){
     coordpredall = cbind(predict.lm(lmlong4ACP, pcalong),predict.lm(lmlat4ACP, pcalat))
     # on utilise ensuite que le jeu de validation numéro 1 pour commencer à remplir predictedCoord
     validationSet = which(set[row(pcalat)[,1]] == k)
+#   learningSet = which(set[row(pcalat)[,1]] != k)
     predictedCoord[validationSet,] = coordpredall[validationSet,]
+#   learningError = rdist.earth(predictedCoord[learningSet,], vraiescoord[learningSet,], miles=F)
+
   }
   
-  # regroupe les vraies coordonnées
-  vraiescoord = NAm2[,8:7]
+#   erreur = 0;
+#   compteur = 0;
+#   for (i in 1:length(learningSet)) {
+#     print(names[i])
+#     # on regroupe les coordonnées prédites dans un tableau pour toute une population
+#     coordpred = cbind(lmlon4ACPg$fitted.values[which(NAm2[,3]==names[i])],lmlat4ACP$fitted.values[which(NAm2[,3]==names[i])])
+#     # on récupère les vraies coordonnées pour cette population
+#     vraiescoord = NAm2[which(NAm2[,3]==names[i]),8:7][1,]
+#     # calcule les distances entre les coordonées prédites et la vraie
+#     erreurs = rdist.earth(coordpred, vraiescoord, miles=F)
+#     erreur = erreur + sum(erreurs)
+#     compteur = compteur + length(erreurs)
+#   }
+#   print(compteur) # donne n=494 le nombre de d'individus
+#   erreurmoy = erreur / compteur;
+  
+  
   # calcule les distances entre les coordonées prédites et la vraie
-  library(fields)
   erreurs = matrix(nrow = 494, ncol = 1, dimnames = list(c(),c("erreur (distance)")))
   for (i in 1:494) {
     onePredictedCoord = subset(predictedCoord, row(predictedCoord)[,1] == i) # au lieu d'utiliser simplement predictedCoord[i,]
     erreurs[i,1] = rdist.earth(onePredictedCoord, vraiescoord[i,], miles=F) # sinon ne marche pas car nrow(predictedCoord[i,]) == NULL (wtf?)
   }
   print(mean(erreurs))
-  erreursMoy[l] = mean(erreurs)
+  erreursPredMoy[l] = mean(erreurs)
   
 }
