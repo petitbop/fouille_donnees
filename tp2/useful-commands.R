@@ -123,6 +123,7 @@ set = sample(labels,494)
 
 ################################ 5.b)i.
 predictedCoord = matrix(nrow = 494, ncol = 2, dimnames = list(c(),c("longitude", "latitude")))
+#regressedCoord = matrix(nrow = 494, ncol = 2, dimnames = list(c(),c("longitude", "latitude")))
 
 ################################ 5.b)ii.
 naxes = 4 # ATTENTION : pas sur d'avoir compris ce qu'était reellemnt naxes
@@ -177,7 +178,6 @@ for (i in 1:494) {
   onePredictedCoord = subset(predictedCoord, row(predictedCoord)[,1] == i) # au lieu d'utiliser simplement predictedCoord[i,]
   erreurs[i,1] = rdist.earth(onePredictedCoord, vraiescoord[i,], miles=F) # sinon ne marche pas car nrow(predictedCoord[i,]) == NULL (wtf?)
 }
-print(sum(erreurs)) # il faut surement renvoyer autre chose que la somme brute
 print(mean(erreurs))
 
 ################################ 5.c)
@@ -210,23 +210,20 @@ for(l in 1:length(testedNaxes)){
     coordpredall = cbind(predict.lm(lmlong4ACP, pcalong),predict.lm(lmlat4ACP, pcalat))
     # on utilise ensuite que le jeu de validation numéro 1 pour commencer à remplir predictedCoord
     validationSet = which(set[row(pcalat)[,1]] == k)
-    learningSet = which(set[row(pcalat)[,1]] != k)
+#    learningSet = which(set[row(pcalat)[,1]] != k)
     predictedCoord[validationSet,] = coordpredall[validationSet,]
+#    regressedCoord[learningSet,] = coordpredall[learningSet,]
     
-    valReg = coordpredall[learningSet,1]
-    erreursReg = vector("numeric",length(learningSet))
-    learnvraiescoord = vraiescoord[learningSet,]
-    
-    for (i in 1:length(learningSet)) {
-      onePredictedCoord = subset(valReg, row(valReg)[,1] == i) # au lieu d'utiliser simplement predictedCoord[i,]
-      erreursReg[i] = rdist.earth(onePredictedCoord, learnvraiescoord[i,], miles=F) # sinon ne marche pas car nrow(predictedCoord[i,]) == NULL (wtf?)      
-    }    
-    
-    meanErreursReg[k] = mean(erreursReg)
+#     for (i in learningSet) {
+#       onePredictedCoord = subset(regressedCoord, row(regressedCoord)[,1] == i) # au lieu d'utiliser simplement predictedCoord[i,]
+#       erreursReg[i] = rdist.earth(onePredictedCoord, vraiesCoord[i,], miles=F) # sinon ne marche pas car nrow(predictedCoord[i,]) == NULL (wtf?)      
+#     }    
+#     
+#     meanErreursReg[k] = mean(erreursReg[learningSet])
     
   }
   
-  erreursRegMoy[l] = mean(meanErreursReg);
+#   erreursRegMoy[l] = mean(meanErreursReg);
   
   
   # calcule les distances entre les coordonées prédites et la vraie
