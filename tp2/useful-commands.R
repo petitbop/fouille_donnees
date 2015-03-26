@@ -188,10 +188,11 @@ library(fields)
 
 vraiescoord = NAm2[,8:7]
 for(l in 1:length(testedNaxes)){
-
+  
   naxes = testedNaxes[l]
   caxes=1:naxes
   pcalong=data.frame(cbind(long=NAm2[,c("long")],pcaNAm2$x[,caxes]))
+  meanErreursReg = vector("numeric",10)
   
   for (k in 1:10) { # on fait maintenant varier le jeu de validation
     # pcalong reste le meme
@@ -209,27 +210,23 @@ for(l in 1:length(testedNaxes)){
     coordpredall = cbind(predict.lm(lmlong4ACP, pcalong),predict.lm(lmlat4ACP, pcalat))
     # on utilise ensuite que le jeu de validation numéro 1 pour commencer à remplir predictedCoord
     validationSet = which(set[row(pcalat)[,1]] == k)
-#   learningSet = which(set[row(pcalat)[,1]] != k)
+    learningSet = which(set[row(pcalat)[,1]] != k)
     predictedCoord[validationSet,] = coordpredall[validationSet,]
-#   learningError = rdist.earth(predictedCoord[learningSet,], vraiescoord[learningSet,], miles=F)
-
+    
+    valReg = coordpredall[learningSet,1]
+    erreursReg = vector("numeric",length(learningSet))
+    learnvraiescoord = vraiescoord[learningSet,]
+    
+    for (i in 1:length(learningSet)) {
+      onePredictedCoord = subset(valReg, row(valReg)[,1] == i) # au lieu d'utiliser simplement predictedCoord[i,]
+      erreursReg[i] = rdist.earth(onePredictedCoord, learnvraiescoord[i,], miles=F) # sinon ne marche pas car nrow(predictedCoord[i,]) == NULL (wtf?)      
+    }    
+    
+    meanErreursReg[k] = mean(erreursReg)
+    
   }
   
-#   erreur = 0;
-#   compteur = 0;
-#   for (i in 1:length(learningSet)) {
-#     print(names[i])
-#     # on regroupe les coordonnées prédites dans un tableau pour toute une population
-#     coordpred = cbind(lmlon4ACPg$fitted.values[which(NAm2[,3]==names[i])],lmlat4ACP$fitted.values[which(NAm2[,3]==names[i])])
-#     # on récupère les vraies coordonnées pour cette population
-#     vraiescoord = NAm2[which(NAm2[,3]==names[i]),8:7][1,]
-#     # calcule les distances entre les coordonées prédites et la vraie
-#     erreurs = rdist.earth(coordpred, vraiescoord, miles=F)
-#     erreur = erreur + sum(erreurs)
-#     compteur = compteur + length(erreurs)
-#   }
-#   print(compteur) # donne n=494 le nombre de d'individus
-#   erreurmoy = erreur / compteur;
+  erreursRegMoy[l] = mean(meanErreursReg);
   
   
   # calcule les distances entre les coordonées prédites et la vraie
