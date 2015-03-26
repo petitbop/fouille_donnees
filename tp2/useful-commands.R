@@ -12,6 +12,7 @@ npop=length(names)
 coord=unique(NAm2[,c("Pop","long","lat")]) #coordinates for each pop
 colPalette=rep(c("black","red","cyan","orange","brown","blue","pink","purple","darkgreen"),3)
 pch=rep(c(16,15,25),each=9)
+
 pdf("map.pdf")
 plot(coord[,c("long","lat")],pch=pch,col=colPalette,asp=1, cex=0.7)
 # asp permet d'avoir le rapport correct entre les axes longitude et latitude
@@ -103,7 +104,7 @@ for (i in 1:npop) {
   # on récupère les vraies coordonnées pour cette population
   vraiescoord = NAm2[which(NAm2[,3]==names[i]),8:7][1,]
   # calcule les distances entre les coordonées prédites et la vraie
-  library("fields")
+  library(fields)
   erreurs = rdist.earth(coordpred, vraiescoord, miles=F)
   erreur = erreur + sum(erreurs)
   compteur = compteur + length(erreurs)
@@ -170,11 +171,54 @@ for (k in 2:10) { # on fait maintenant varier le jeu de validation
 # regroupe les vraies coordonnées
 vraiescoord = NAm2[,8:7]
 # calcule les distances entre les coordonées prédites et la vraie
-library("fields")
+library(fields)
 erreurs = matrix(nrow = 494, ncol = 1, dimnames = list(c(),c("erreur (distance)")))
 for (i in 1:494) {
   onePredictedCoord = subset(predictedCoord, row(predictedCoord)[,1] == i) # au lieu d'utiliser simplement predictedCoord[i,]
   erreurs[i,1] = rdist.earth(onePredictedCoord, vraiescoord[i,], miles=F) # sinon ne marche pas car nrow(predictedCoord[i,]) == NULL (wtf?)
 }
 print(sum(erreurs)) # il faut surement renvoyer autre chose que la somme brute
+print(mean(erreurs))
 
+################################ 5.c)
+testedNaxes = seq(2, 440, by=10)
+erreursMoy = vector("numeric",length(testedNaxes))
+
+for(l in 1:length(testedNaxes)){
+
+  naxes = testedNaxes[l]
+  caxes=1:naxes
+  pcalong=data.frame(cbind(long=NAm2[,c("long")],pcaNAm2$x[,caxes]))
+  
+  for (k in 1:10) { # on fait maintenant varier le jeu de validation
+    # pcalong reste le meme
+    # on enlève donc de pcalong les données qui vont servir à la validation
+    pcalonglearn = subset(pcalong, set[row(pcalong)[,1]] != k)
+    lmlong4ACP <- lm(formula = long ~., data = pcalonglearn)
+    #summary(lmlong4ACP)
+    # pareil pour la latitude
+    pcalat=data.frame(cbind(lat=NAm2[,c("lat")],pcaNAm2$x[,caxes]))
+    # on enlève donc de pcalat les données qui vont servir à la validation
+    pcalatlearn = subset(pcalat, set[row(pcalat)[,1]] != k)
+    lmlat4ACP <- lm(formula = lat ~., data = pcalatlearn)
+    #summary(lmlat4ACP)
+    # on prédit d'abord toutes les valeurs
+    coordpredall = cbind(predict.lm(lmlong4ACP, pcalong),predict.lm(lmlat4ACP, pcalat))
+    # on utilise ensuite que le jeu de validation numéro 1 pour commencer à remplir predictedCoord
+    validationSet = which(set[row(pcalat)[,1]] == k)
+    predictedCoord[validationSet,] = coordpredall[validationSet,]
+  }
+  
+  # regroupe les vraies coordonnées
+  vraiescoord = NAm2[,8:7]
+  # calcule les distances entre les coordonées prédites et la vraie
+  library(fields)
+  erreurs = matrix(nrow = 494, ncol = 1, dimnames = list(c(),c("erreur (distance)")))
+  for (i in 1:494) {
+    onePredictedCoord = subset(predictedCoord, row(predictedCoord)[,1] == i) # au lieu d'utiliser simplement predictedCoord[i,]
+    erreurs[i,1] = rdist.earth(onePredictedCoord, vraiescoord[i,], miles=F) # sinon ne marche pas car nrow(predictedCoord[i,]) == NULL (wtf?)
+  }
+  print(mean(erreurs))
+  erreursMoy[l] = mean(erreurs)
+  
+}
