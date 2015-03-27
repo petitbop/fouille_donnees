@@ -62,12 +62,12 @@
 	OK
 
 \item[1.b)]
-Le script place toutes les origines des individus des données sur une carte du continent américain, suivant la latitude et la longitude. La carte obtenue correspond bien à celle du sujet. 
+Le script place toutes les origines des individus des données sur une carte du continent américain, suivant la latitude et la longitude (figure 1). La carte obtenue correspond bien à celle du sujet. 
 
 \begin{figure}[!h]
 \begin{center}
 \includegraphics[scale=1]{map.pdf}
-\caption{Répartitions des populations}
+\caption{Origine géographique des indiens d'Amérique}
 \end{center}
 \end{figure}
 
@@ -75,9 +75,25 @@ Le script place toutes les origines des individus des données sur une carte du 
 
 
 \section{Régression}
-Le problème c'est qu'on est incapable de trouver les coefficients de la régression de la longitude car le nombre de marqueurs génétiques (5709) est beaucoup plus grand que le nombre d'individus (494). C'est pourquoi on régressera la latitude et la longitude avec les scores de l'ACP faite les marqueurs génétiques. 
+%Le problème c'est qu'on est incapable de trouver les coefficients de la régression de la longitude car le nombre de marqueurs génétiques (5709) est beaucoup plus grand que le nombre d'individus (494). C'est pourquoi on régressera la latitude et la longitude avec les scores de l'ACP faite les marqueurs génétiques. 
+%
+%À refaire (avec le cours) avec une démonstration mathématique.
 
-À refaire (avec le cours) avec une démonstration mathématique.
+La régression n'est pas effectuée par R : les coefficients $(\hat{\beta_{j}})_{0 \leq j \leq p}$ renvoyés valent $NA$ (Not available). Le problème est la non-unicité de la régression.
+
+Lorsque $n \geq p+1$, alors $X^{T} X$ est inversible, et l'unique solution de la régression est :
+\begin{displaymath}
+\hat{\beta} = (X^{T} X)^{-1} X^{T} y
+\end{displaymath}
+Par contre, ici, $n < p+1$.
+D'où :
+\begin{eqnarray*}
+rang(X^{T} X) & \leq & rang(X) \\
+& \leq & n \\
+& < & p+1
+\end{eqnarray*}
+$X^{T} X$ est une matrice carrée de taille $p+1$, de rang strictement inférieur à $p+1$. Donc $X^{T} X$ n'est pas inversible, et la solution de la régression n'est pas unique.
+
 
 \section{ACP}
 \begin{enumerate}
