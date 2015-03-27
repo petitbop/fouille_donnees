@@ -87,7 +87,7 @@ for (i in 1:npop) {
   lines(lmlong$fitted.values[which(NAm2[,3]==names[i])],lmlat$fitted.values[which(NAm2[,3]==names[i])],type="p",col=colPalette[i],pch=pch[i], cex=0.7)
 }
 legend("bottomleft",legend=names,col=colPalette,lty=-1,pch=pch,cex=.55,ncol=3,lwd=2)
-map("world",add=T)
+library(maps);map("world",add=T)
 dev.off() # pour fermer la fenêtre courante
 # j'ai l'impression qu'en faisant une sorte de barycentre, on arrive à retrouver la position géographique à partir des marqueurs génétiques
 

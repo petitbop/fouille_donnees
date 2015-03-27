@@ -66,7 +66,7 @@ Le script place toutes les origines des individus des données sur une carte du 
 
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[scale=0.5]{Plot1b.pdf}
+\includegraphics[scale=1]{map.pdf}
 \caption{Répartitions des populations}
 \end{center}
 \end{figure}
@@ -83,15 +83,15 @@ Le problème c'est qu'on est incapable de trouver les coefficients de la régres
 \begin{enumerate}
 \setlength{\itemsep}{20pt}
 \item[3.a)]
- L'analyse en composantes principales consiste à transformer des variables corrélées en nouvelles variables décorrélées les unes des autres. Ces nouvelles variables sont appelées composantes principales. Elle permet de faire une analyse sur moins de variables et réduit la redondance de l'information. En pratique, elle projète des données un numbre réduit d'axes orthogonaux, tout en maximisant la variance des données projetées sur chacun des axes.
+ Le principe de l'Analyse en Composantes Principales est de tirer parti de la corrélation entre les variables du problème pour expliciter un nombre réduit de nouvelles variables, combinaison linéaires des anciennes, qui permettent de modéliser correctement la variance de l'échantillon. Son intérêt majeur est donc de limiter le nombre de variables à étudier. Ici, réaliser une ACP permet ensuite de régresser les coordonnées géographiques.
 
  \item[3.b)]
  On réalise une ACP sur les données génétiques avec tous les individus. 
- On n'a pas besoin d'utiliser l'argument scale car les variables (les marqueurs génétiques) n'ont pas d'unités de mesures : les valeurs sont binaires. Il n'y a donc pas besoin de mettre ces variables sur une même échelle. 
+ On n'a pas besoin d'utiliser l'argument scale car les variables (les marqueurs génétiques) n'ont pas d'unités de mesures : les valeurs sont binaires. Il n'y a donc pas besoin de mettre ces variables sur une même échelle.
 
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[scale=0.5]{Plot3b.pdf}
+\includegraphics[scale=1]{acp12.pdf}
 \caption{Les populations projetées sur les 2 premières PC}
 \end{center}
 \end{figure}
@@ -100,7 +100,7 @@ Avec les 2 premiers axes de l'ACP, les individus qui sont facilement identifiabl
 \pagebreak
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[scale=0.5]{Plot3b_bis.pdf}
+\includegraphics[scale=1]{acp56.pdf}
 \caption{Les populations projetées sur les PC 5 et 6}
 \end{center}
 \end{figure}
@@ -125,8 +125,8 @@ Les coordonnées spatiales prédites pour chaque population sont localisées dan
 
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[scale=0.5]{Plot4b.pdf}
-\caption{Coordonnées spatiales prédites pour chaque population}
+\includegraphics[scale=1]{map_acp.pdf}
+\caption{Régression des coordonnées spatiales avec les 250 premiers axes de l'ACP}
 \end{center}
 \end{figure}
 
