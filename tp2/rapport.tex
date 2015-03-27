@@ -112,7 +112,7 @@ $X^{T} X$ est une matrice carrée de taille $p+1$, de rang strictement inférieu
 \end{center}
 \end{figure}
 
-Avec les 2 premiers axes de l'ACP, les individus qui sont facilement identifiables sont les Surui et les Aches.
+En considérant les 2 premiers axes de l'ACP, les individus qui sont facilement identifiables sont les Surui et les Aches. En effet, ils sont relativement éloignés de l'origine, et les vecteurs associés ne sont pas colinéaires et de même sens. Cependant, en observant la figure 1, on s'aperçoit que les localisations associées sont relativement proches. Ainsi, les Surui et les Aches se différencient bien génétiquement, mais ces différences ne sont pas corrélées à une origine géographique différente. En régressant les coordonnées géographiques selon les axes de l'ACP, on s'aperçoit effectivement que le premier axe est indépendant de la localisation (cf. question 4.a)).
 \pagebreak
 \begin{figure}[!h]
 \begin{center}
@@ -121,10 +121,13 @@ Avec les 2 premiers axes de l'ACP, les individus qui sont facilement identifiabl
 \end{center}
 \end{figure}
 
-Avec les axes 5 et 6, ce sont les Karitiana et les Pima qui sont facilement identifiables. 
+Avec les axes 5 et 6, ce sont les Karitiana et les Pima qui sont facilement identifiables, d'autant plus que chacun des vecteurs associés est aligné sur un axe différent.
 
  \item[3.c)] 
- Le pourcentage cumulé de variance expliqué par les $2$ premières PC est de $3,57\%$. Elle est très faible donc l'ACP n'est pas réalisable : en retenant que les 2 premières PC, on ne peut pas bien expliquer le modèle. Pour avoir un pourcentage de variance correct ($70\%$) on va devoir garder 210 PC, ainsi on perdrait tout l'intérêt d'un ACP.
+ Le pourcentage de variance cumulée expliquée par les $2$ premières PC est de $3,57\%$. Ce pourcentage paraît relativement faible, mais il ne faut pas oublier que l'on part d'un très grand nombre de variables ($p = 5709$ marqueurs génétiques). En prenant deux variables de départ quelconques, on expliquerait en moyenne $2/p = 0.035\%$ de variance. On a donc réussi à expliquer $100$ fois plus de variance.
+ 
+ En gardant les 250 premiers axes de l'ACP, on exprime $77 \%$ de la variance du jeu de données, en divisant par $20$ le nombre de variables.
+ %Elle est très faible donc l'ACP n'est pas réalisable : en retenant que les 2 premières PC, on ne peut pas bien expliquer le modèle. Pour avoir un pourcentage de variance correct ($70\%$) on va devoir garder 210 PC, ainsi on perdrait tout l'intérêt d'un ACP.
 
 \end{enumerate}
 
@@ -134,7 +137,7 @@ Avec les axes 5 et 6, ce sont les Karitiana et les Pima qui sont facilement iden
 \setlength{\itemsep}{12pt}
 
 \item[4.a)]
-La régression de la latitude et de la longitude en utilisant comme prédicteurs les scores des 250 premiers axes de l'ACP nous donne que l'ACP1 n'influe pas sur la localisation même si elle maximise la variance des variables. Dans les deux régressions, la p-valeur de l'ACP1 est très grande (respectivement $0.44\%$ et $0.23\%$ pour la régression de la longitude et de la latitude) par rapport aux autres p-valeur des autres ACP. Donc il y a de forte chance que le coefficient de régression associé à ACP1 soit nul. 
+La régression de la latitude et de la longitude en utilisant comme prédicteurs les scores des 250 premiers axes de l'ACP nous donne que le premier axe n'influe pas sur la localisation même si il maximise la variance des variables. Dans les deux régressions, la p-valeur associée est très grande (respectivement $44\%$ et $23\%$ pour la régression de la longitude et de la latitude) par rapport aux p-valeurs des autres axes. Donc il y a de forte chance que le coefficient de régression associé au premier axe soit nul. 
 
 \item[4.b)] 
 Les coordonnées spatiales prédites pour chaque population sont localisées dans la même zone que les coordonnées réelles de chaque population. Cependant, on observe des erreurs : les coordonnées prédites peuvent être parfois très dispersée (comme les Huilliches). De plus, à cause de cette dispersion, on a beaucoup de mal à distinguer les populations qui sont situées très près les unes des autres (comme toutes celles d'Amériques centrales) : les points prédits se recoupent trop.
