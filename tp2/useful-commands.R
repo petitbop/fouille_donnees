@@ -81,7 +81,7 @@ summary(lmlat) # la premiere composante principale "n'est pas bien représenté"
 
 ################################ 4.b)
 pdf("map_acp.pdf")
-plot(lmlong$fitted.values,lmlat$fitted.values,col="white",xlim = c(-140,-20),ylim=c(-50,70)) # bornes rajoutées
+plot(lmlong$fitted.values,lmlat$fitted.values,col="white",xlim = c(-140,-20),ylim=c(-50,70), xlab="long", ylab="lat") # bornes rajoutées
 for (i in 1:npop) {
   print(names[i])
   lines(lmlong$fitted.values[which(NAm2[,3]==names[i])],lmlat$fitted.values[which(NAm2[,3]==names[i])],type="p",col=colPalette[i],pch=pch[i], cex=0.7)
@@ -238,3 +238,27 @@ for(l in 1:length(testedNaxes)){
   erreursPredMoy[l] = mean(erreurs)
   
 }
+
+
+pdf("erreurs.pdf")
+library(lattice)
+xyplot(erreursRegMoy + erreursPredMoy ~ testedNaxes, col = c("blue","red"), xlab="Nombres d'axes d'ACP",ylab="Erreurs moyennes")
+dev.off()
+
+
+caxes=1:52
+finalACP = pcaNAm2$x[,caxes]
+NAlonglat = NAm2[,7:8]
+lmlong <- lm(formula = long ~ finalACP, data = NAlonglat)
+lmlat <- lm(formula = lat ~ finalACP, data = NAlonglat)
+
+
+pdf("map_final_acp.pdf")
+plot(lmlong$fitted.values,lmlat$fitted.values,col="white",xlim = c(-140,-20),ylim=c(-50,70), xlab="long", ylab="lat") # bornes rajoutées
+for (i in 1:npop) {
+  print(names[i])
+  lines(lmlong$fitted.values[which(NAm2[,3]==names[i])],lmlat$fitted.values[which(NAm2[,3]==names[i])],type="p",col=colPalette[i],pch=pch[i], cex=0.7)
+}
+legend("bottomleft",legend=names,col=colPalette,lty=-1,pch=pch,cex=.55,ncol=3,lwd=2)
+map("world",add=T)
+dev.off()
