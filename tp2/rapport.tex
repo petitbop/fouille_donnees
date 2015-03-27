@@ -112,7 +112,7 @@ $X^{T} X$ est une matrice carrée de taille $p+1$, de rang strictement inférieu
 \end{center}
 \end{figure}
 
-En considérant les 2 premiers axes de l'ACP, les individus qui sont facilement identifiables sont les Surui et les Aches. En effet, ils sont relativement éloignés de l'origine, et les vecteurs associés ne sont pas colinéaires et de même sens. Cependant, en observant la figure 1, on s'aperçoit que les localisations associées sont relativement proches. Ainsi, les Surui et les Aches se différencient bien génétiquement, mais ces différences ne sont pas corrélées à une origine géographique différente. En régressant les coordonnées géographiques selon les axes de l'ACP, on s'aperçoit effectivement que le premier axe est indépendant de la localisation (cf. question 4.a)).
+En considérant les 2 premiers axes de l'ACP, les individus qui sont facilement identifiables sont les Surui et les Aches. En effet, ils sont relativement éloignés de l'origine, et les vecteurs associés ne sont pas colinéaires et de même sens (cf. figure 2). Cependant, en observant la figure 1, on s'aperçoit que les localisations associées sont relativement proches. Ainsi, les Surui et les Aches se différencient bien génétiquement, mais ces différences ne sont pas corrélées à une origine géographique différente. En régressant les coordonnées géographiques selon les axes de l'ACP, on s'aperçoit effectivement que le premier axe est indépendant de la localisation (cf. question 4.a)).
 \pagebreak
 \begin{figure}[!h]
 \begin{center}
@@ -121,26 +121,28 @@ En considérant les 2 premiers axes de l'ACP, les individus qui sont facilement 
 \end{center}
 \end{figure}
 
-Avec les axes 5 et 6, ce sont les Karitiana et les Pima qui sont facilement identifiables, d'autant plus que chacun des vecteurs associés est aligné sur un axe différent.
+Avec les axes 5 et 6, ce sont les Karitiana et les Pima qui sont facilement identifiables, d'autant plus que chacun des vecteurs associés est aligné sur un axe différent (cf. figure 3).
 
  \item[3.c)] 
  Le pourcentage de variance cumulée expliquée par les $2$ premières PC est de $3,57\%$. Ce pourcentage paraît relativement faible, mais il ne faut pas oublier que l'on part d'un très grand nombre de variables ($p = 5709$ marqueurs génétiques). En prenant deux variables de départ quelconques, on expliquerait en moyenne $2/p = 0.035\%$ de variance. On a donc réussi à expliquer $100$ fois plus de variance.
  
  En gardant les 250 premiers axes de l'ACP, on exprime $77 \%$ de la variance du jeu de données, en divisant par $20$ le nombre de variables.
- %Elle est très faible donc l'ACP n'est pas réalisable : en retenant que les 2 premières PC, on ne peut pas bien expliquer le modèle. Pour avoir un pourcentage de variance correct ($70\%$) on va devoir garder 210 PC, ainsi on perdrait tout l'intérêt d'un ACP.
 
 \end{enumerate}
 
-\section{PCR Principal Companents Regression}
+\section{PCR Principal Components Regression}
 
 \begin{enumerate}
 \setlength{\itemsep}{12pt}
 
 \item[4.a)]
-La régression de la latitude et de la longitude en utilisant comme prédicteurs les scores des 250 premiers axes de l'ACP nous donne que le premier axe n'influe pas sur la localisation même si il maximise la variance des variables. Dans les deux régressions, la p-valeur associée est très grande (respectivement $44\%$ et $23\%$ pour la régression de la longitude et de la latitude) par rapport aux p-valeurs des autres axes. Donc il y a de forte chance que le coefficient de régression associé au premier axe soit nul. 
+On régresse la latitude et la longitude en utilisant comme prédicteurs les scores des 250 premiers axes de l'ACP. On observe que le premier axe n'influe pas sur la localisation en dépit du fait qu'il maximise la variance des variables. Dans les deux régressions, la p-valeur associée est très grande (respectivement $44\%$ et $23\%$ pour la régression de la longitude et de la latitude) par rapport aux p-valeurs des autres axes. Donc il y a de forte chance que le coefficient de régression associé au premier axe soit nul. 
 
-\item[4.b)] 
-Les coordonnées spatiales prédites pour chaque population sont localisées dans la même zone que les coordonnées réelles de chaque population. Cependant, on observe des erreurs : les coordonnées prédites peuvent être parfois très dispersée (comme les Huilliches). De plus, à cause de cette dispersion, on a beaucoup de mal à distinguer les populations qui sont situées très près les unes des autres (comme toutes celles d'Amériques centrales) : les points prédits se recoupent trop.
+\item[4.b)]
+On affiche sur une carte les coordonnées spatiales régressées pour chaque individu (cf. figure 4). Cette carte donne une image trop optimiste de la capacité à retrouver l'origine géographique d'un individu à partir de ses marqueurs génétiques. En effet, on a considéré uniquement l'erreur de régression, et pas l'erreur de prédiction. On fait donc face à un problème d'overfitting : on cherche trop à "coller" aux données, autrement dit on régresse aussi le bruit.
+
+Par ailleurs, il est illusoire de croire que tous les marqueurs génétiques (ou tous les axes de l'ACP) sont corrélés à l'origine géographique. On l'a vu : le premier axe de l'ACP est indépendant de l'origine géographique.
+
 
 \begin{figure}[!h]
 \begin{center}
@@ -150,7 +152,9 @@ Les coordonnées spatiales prédites pour chaque population sont localisées dan
 \end{figure}
 
 \item[4.c)]
-Au final sur tous les écarts entre les valeurs prédites et valeurs réelles mesurés avec la distance du grand cercle on obtient 641km. Cette valeur a été obtenue en prenant la moyenne des écarts pour chaque population. C'est une valeur à relativiser. A l'échelle de l'Amérique ce n'est pas très grand et ce n'est pas si mal. Pour certaines populations cela se voit d'ailleurs, mais dès que les populations sont plus proche que cette distance on peine à les distinguer et donc notre modèle prédictif n'est pas très concluant pour ces populations.
+Pour le modèle précédent (250 axes), l'erreur moyenne en termes de distance est de $641$ km. Etant donnée la complexité de l'histoire humaine (migrations, brassages génétiques), et à l'échelle du continent américain, c'est une erreur relativement faible. Mais n'oublions pas que le problème d'overfitting n'est pas encore réglé, et que l'erreur finale sera donc plus grande.
+
+Ce résultat nous permet néanmoins d'affirmer qu'il n'est en général pas possible de prédire très précisément l'origine géographique d'un individu à partir de ses marqueurs génétiques. Sur la carte (figure 4), on remarque en particulier que les coordonnées régressées des individus en provenance de tribus d'Amérique Centrale sont fortement mélangées, on ne peut donc pas reconstituer les tribus d'origine de ces individus.
 
 \end{enumerate}
 
