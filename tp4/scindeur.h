@@ -30,6 +30,19 @@ List *cons(uint32_t valeur, List *liste) {
     return elem;
 }
 
+// inverser l'ordre d'une liste
+List *inverser(List *liste) {
+    List *liste_inv = NULL;
+    while (liste != NULL) {
+        List *next = liste->next;
+        liste->next = liste_inv;
+        liste_inv = liste;
+        liste = next;
+    }
+    
+    return liste_inv;
+}
+
 // liberer une liste
 
 void free_list(List *list) {
@@ -50,7 +63,7 @@ int print(List *list) {
         compteur++;
     }
 
-    printf("Cette liste a %i elements\n", compteur);
+    printf("Cette liste contient %i elements\n", compteur);
     
     return compteur;
 }
@@ -76,8 +89,10 @@ void cons2(uint32_t num, ListeMotsClasse *prec, ListeMotsClasse *cour) {
     elem->next = cour;
 }
 
-void insererDans(ListeMotsClasse *prec, ListeMotsClasse *cour, uint32_t num) {
+void insererDans(ListeMotsClasse **precedent, ListeMotsClasse **courant, uint32_t num) {
     int estInsere = 0;
+    ListeMotsClasse *prec = *precedent;
+    ListeMotsClasse *cour = *courant;
     while(!estInsere) {
         if (num < cour->numMot) {
             cons2(num, prec, cour);
@@ -92,9 +107,28 @@ void insererDans(ListeMotsClasse *prec, ListeMotsClasse *cour, uint32_t num) {
             cour = prec->next;            
         }
     }
+    *precedent = prec;
+    *courant = cour; 
 }
 
-// compte le nombre d'éléments (-2)
+double findPCki(int k, uint32_t num, ListeMotsClasse **courant, uint16_t N[NB_CAT]) {
+    ListeMotsClasse *cour = *courant;
+    while(1) {
+        if (num < cour->numMot) {
+            *courant = cour; 
+            return((double)1 / (double)(N[k]+2));
+        } else {
+            if (num == cour->numMot) {
+                *courant = cour; 
+                return((double)(cour->nbDocsClasse+1) / (double)(N[k]+2));
+            }
+            // on avance pour >=
+            cour = cour->next;            
+        }
+    }    
+}
+
+// compte le nombre d'éléments
 int count(ListeMotsClasse *list) {
     int compteur = 0;
     while (list != NULL) { /* tant que la liste n'est pas vide */
@@ -102,7 +136,7 @@ int count(ListeMotsClasse *list) {
         compteur++;
     }
 
-    return (compteur-2);
+    return compteur;
 }
 
 // liberer une liste
