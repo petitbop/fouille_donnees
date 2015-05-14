@@ -1,9 +1,11 @@
 #include "scindeur.h"
+#include <math.h>
+#include <float.h>
 
 // calcule la taille du vocabulaire et le nombre de documents par catégorie
 // requiert que nb_docs ait ses élements initialisés à 0
 
-void question1(int *taille_voca, uint16_t nb_docs[NB_CAT]) {
+int question1(uint16_t nb_docs[NB_CAT]) {
 
     int i;
     for (i = 0; i < NB_CAT; i++) {
@@ -39,7 +41,7 @@ void question1(int *taille_voca, uint16_t nb_docs[NB_CAT]) {
     }
     fclose(fichier);
 
-    *taille_voca = max;
+    return max;
 }
 
 
@@ -79,7 +81,8 @@ void apprentissageBernoulli(List *base_app, int taille_voca, uint16_t N[NB_CAT],
             fscanf_value = fscanf(fichier, " %d:%d", &num_mot, &nb_occur);
             if (fscanf_value == 2) {
                 if (est_app) {
-                    insererDans(prec, cour, num_mot);
+                    insererDans(&prec, &cour, num_mot);
+                    //printf("Prec et suiv = %d et %d\n", prec->numMot, cour->numMot); //DEBUG
                 }
             } else if (fscanf_value == -1) {
                 fin_de_ligne = 1;
@@ -93,14 +96,115 @@ void apprentissageBernoulli(List *base_app, int taille_voca, uint16_t N[NB_CAT],
     }
 
     fclose(fichier);
-
+    
+    // affichage
+    printf("Dans la base d'apprentissage du modèle multivarié de Bernoulli,\n");
     int i;
     for (i = 0; i < NB_CAT; i++) {
-        printf("La classe %d contient %d documents et %d mots\n",
-                i + 1, N[i], count(df[i]));
+        printf("La classe %d contient %d documents et %d mots differents\n",
+                i + 1, N[i], count(df[i])-2);
+    }    
+    
+    assert(base_app == NULL);
+}
+
+// Algorithm 6: Modèle multivarié de Barnoulli, phase de test
+
+int testBernoulli(List *base_test, int taille_voca, uint16_t N[NB_CAT],
+        ListeMotsClasse * df[NB_CAT], int m) {
+
+    // on initialise les PiF[k]
+    double PiF[NB_CAT];
+    int k;
+    for (k=0; k< NB_CAT ; k++) {
+        PiF[k] = log((double)N[k] / (double)m);
     }
 
-    assert(base_app == NULL);
+    FILE* fichier = fopen("BaseReuters-29", "r");
+    int num_cat, num_mot, nb_occur;
+    int fin_de_ligne = 0;
+    int fin_de_fichier = 0;
+    int est_test; //fait partie ou non de la base de test
+    int fscanf_value;
+    uint32_t num_ligne = 1;
+    int nbErreurs = 0;
+
+    fscanf(fichier, "%d", &num_cat);
+    while (!fin_de_fichier) {
+        printf("Ligne %d\n", num_ligne); //DEBUG
+        fin_de_ligne = 0;
+        if (num_ligne == base_test->val) {
+            est_test = 1;
+            List *cell = base_test;
+            base_test = base_test->next; // on avance dans la base de test
+            free(cell);
+        } else {
+            est_test = 0;
+        }
+        
+        // on construit la chaine des mots de la ligne
+        List *motsLigne = NULL;
+        while (!fin_de_ligne) {
+            fscanf_value = fscanf(fichier, " %d:%d", &num_mot, &nb_occur);
+            if (fscanf_value == 2) {                
+                if (est_test) {
+                    motsLigne = cons(num_mot, motsLigne);
+                }
+            } else if (fscanf_value == -1) {
+                fin_de_ligne = 1;
+                fin_de_fichier = 1;
+            } else { // on a lu la categorie de la prochaine ligne
+                fin_de_ligne = 1;
+                num_ligne++;
+                num_cat = num_mot;
+            }
+        }
+        if (est_test) { // si ce doc fait partie de la base de test
+            // on la met dans l'ordre
+            motsLigne = inverser(motsLigne);
+            
+            // on estime la classe de ce document (cette ligne)
+            double max = -DBL_MAX;
+            uint8_t k_max = 0;
+            for (k = 0; k < NB_CAT; k++) {
+                List *mot = motsLigne;
+                double PiFk = PiF[k];
+                ListeMotsClasse *cour = df[k];
+                int numMotPrec = 0;
+                uint32_t i;
+                // boucle sur les mots du vocabulaire
+                while (mot != NULL) { 
+                    for (i = numMotPrec+1; i < mot->val; i++) { // wid != 1
+                        PiFk += log(1-findPCki(k, i, &cour, N)); 
+                    }
+                    PiFk += log(findPCki(k, mot->val, &cour, N)); 
+                    numMotPrec = mot->val;
+                }
+                for (i = numMotPrec+1; i <= taille_voca; i++) { // wid != 1
+                    PiFk += log(1-findPCki(k, i, &cour, N)); 
+                }
+                // on met à jour le max et son indice
+                if (max < PiFk) {
+                    max = PiFk;
+                    k_max = k+1;
+                }            
+            }
+            
+            // on regarde si cette estimation est bonne
+            if (k_max != num_cat) {
+                nbErreurs++;
+            }   
+            
+            // on libere la memoire
+            free_list(motsLigne);
+        }
+    }
+
+    fclose(fichier);
+    
+    assert(base_test == NULL);
+    
+    return nbErreurs;
 }
 
 int main() {
@@ -111,7 +215,7 @@ int main() {
     uint16_t nb_docs[NB_CAT];
     int taille_voca;
     {
-        question1(&taille_voca, nb_docs);
+        taille_voca = question1(nb_docs);
 
         printf("La taille du vocabulaire est : %d\n", taille_voca);
         int somme_verif = 0;
@@ -149,11 +253,11 @@ int main() {
                 base_test = cons(i, base_test);
             }
         }
-        printf("Base d'apprentissage :\n");
-        int m_app = print(base_apprentissage);
-        printf("Base de test :\n");
-        int m_test = print(base_test);
     }
+    printf("Base d'apprentissage :\n");
+    int m_app = print(base_apprentissage);
+    printf("Base de test :\n");
+    int m_test = print(base_test);
 
 
     /* Question 3 */
@@ -163,12 +267,22 @@ int main() {
     ListeMotsClasse * df[NB_CAT];
 
     apprentissageBernoulli(base_apprentissage, taille_voca, N, df);
+    
+    
+    /* Question 4 */
 
+    printf("\nQuestion 4 :\n");
+    int nbErreurs = testBernoulli(base_test, taille_voca, N, df, m_app);
+    printf("Dans la base de test du modèle multivarié de Bernoulli,\n");
+    printf("Le taux de bonne classification est de %f", 1 - (float)((double)(100*nbErreurs) / (double)m_test));
 
+    
+    
+    int k;
+    for (k = 0; k < NB_CAT; k++) {
+        free_list2(df[k]);
+    }
 
-
-
-    free_list(base_test);
 
     return (0);
 }
