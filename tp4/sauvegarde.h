@@ -10,7 +10,6 @@
 const int TAILLE_APPRENTISSAGE_VOULUE = 52500;
 const int NB_TOTAL_DOCUMENTS = 70703;
 const int NB_CAT = 29;
-int taille_voca;
 
 // structure de liste chainee pour indices
 
@@ -90,8 +89,42 @@ void cons2(uint32_t num, ListeMotsClasse *prec, ListeMotsClasse *cour) {
     elem->next = cour;
 }
 
-double PCki(int k, uint32_t num, uint16_t df[NB_CAT][taille_voca], uint16_t N[NB_CAT]) {    
-    return((double)(df[k][num-1]+1) / (double)(N[k]+2));  
+void insererDans(ListeMotsClasse **precedent, ListeMotsClasse **courant, uint32_t num) {
+    int estInsere = 0;
+    ListeMotsClasse *prec = *precedent;
+    ListeMotsClasse *cour = *courant;
+    while(!estInsere) {
+        if (num < cour->numMot) {
+            cons2(num, prec, cour);
+            estInsere = 1;
+        } else {
+            if (num == cour->numMot) {
+                (cour->nbDocsClasse)++;
+                estInsere = 1;
+            }
+            // on avance pour >=
+            prec = cour;
+            cour = prec->next;            
+        }
+    }
+    *precedent = prec;
+    *courant = cour; 
+}
+
+double findPCki(int k, uint32_t num, ListeMotsClasse **courant, uint16_t N[NB_CAT]) {
+    ListeMotsClasse *cour = *courant;
+    while(1) {
+        if (num < cour->numMot) {
+            *courant = cour; 
+            return((double)1 / (double)(N[k]+2));
+        } else {
+            if (num == cour->numMot) {
+                *courant = cour->next; 
+                return((double)(cour->nbDocsClasse+1) / (double)(N[k]+2));
+            }
+            cour = cour->next;            
+        }
+    }    
 }
 
 // compte le nombre d'éléments
@@ -122,15 +155,27 @@ double r2() {
 }
 
 // initialise N et df 
-void init(int taille_voca, uint16_t N[NB_CAT], uint16_t df[NB_CAT][taille_voca]) {
+void init(int taille_voca, uint16_t N[NB_CAT], ListeMotsClasse * df[NB_CAT]) {
     int k;
     for (k = 0; k < NB_CAT; k++) {
         // on initialise N avec des 0
         N[k] = 0;
-        int i;
-        for (i = 0; i < taille_voca; i++) {
-            df[k][i] = 0;
-        }
+        // élément indiquant le début
+        ListeMotsClasse *elem = malloc(sizeof (ListeMotsClasse));
+        if (NULL == elem)
+            exit(EXIT_FAILURE);
+        elem->numMot = 0;
+        elem->nbDocsClasse = 0;
+        // élément indiquant la fin
+        ListeMotsClasse *elem2 = malloc(sizeof (ListeMotsClasse));
+        if (NULL == elem2)
+            exit(EXIT_FAILURE);
+        elem2->numMot = taille_voca + 1;
+        elem2->nbDocsClasse = 0;
+        // jonction des éléments
+        df[k] = elem;
+        elem->next = elem2;
+        elem2->next = NULL;
     }
 }
 

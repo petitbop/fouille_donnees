@@ -47,8 +47,8 @@ int question1(uint16_t nb_docs[NB_CAT]) {
 
 // Algorithm 5: Modèle multivarié de Barnoulli, phase d'apprentissage
 
-void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
-        uint16_t df[NB_CAT][taille_voca]) {
+void apprentissageBernoulli(List *base_app, int taille_voca, uint16_t N[NB_CAT],
+        ListeMotsClasse * df[NB_CAT]) {
 
     // on initialise les chaines de df avec un element de debut et de fin
     // on initialise également les N[k] à 0
@@ -64,6 +64,8 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
 
     fscanf(fichier, "%d", &num_cat);
     while (!fin_de_fichier) {
+        ListeMotsClasse *prec = df[num_cat - 1];
+        ListeMotsClasse *cour = prec->next;
         fin_de_ligne = 0;
         if (num_ligne == base_app->val) {
             est_app = 1;
@@ -79,7 +81,7 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
             fscanf_value = fscanf(fichier, " %d:%d", &num_mot, &nb_occur);
             if (fscanf_value == 2) {
                 if (est_app) {
-                    df[num_cat-1][num_mot-1]++;
+                    insererDans(&prec, &cour, num_mot);
                 }
             } else if (fscanf_value == -1) {
                 fin_de_ligne = 1;
@@ -94,13 +96,21 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
 
     fclose(fichier);
     
+    // affichage
+    printf("Dans la base d'apprentissage du modèle multivarié de Bernoulli,\n");
+    int i;
+    for (i = 0; i < NB_CAT; i++) {
+        printf("La classe %d contient %d documents et %d mots differents\n",
+                i + 1, N[i], count(df[i])-2);
+    }    
+    
     assert(base_app == NULL);
 }
 
 // Algorithm 6: Modèle multivarié de Barnoulli, phase de test
 
-int testBernoulli(List *base_test, uint16_t N[NB_CAT],
-        uint16_t df[NB_CAT][taille_voca], int m) {
+int testBernoulli(List *base_test, int taille_voca, uint16_t N[NB_CAT],
+        ListeMotsClasse * df[NB_CAT], int m) {
 
     // on initialise les PiF[k]
     double PiF[NB_CAT];
@@ -116,7 +126,7 @@ int testBernoulli(List *base_test, uint16_t N[NB_CAT],
     int est_test; //fait partie ou non de la base de test
     int fscanf_value;
     uint32_t num_ligne = 1;
-    int nbJuste = 0;
+    int nbErreurs = 0;
 
     fscanf(fichier, "%d", &num_cat);
     while (!fin_de_fichier) {
@@ -157,22 +167,23 @@ int testBernoulli(List *base_test, uint16_t N[NB_CAT],
             uint8_t k_max = 0;
             for (k = 0; k < NB_CAT; k++) {
                 List *mot = motsLigne;
-                uint32_t numMotPrec = 0;
                 double PiFk = PiF[k];
+                ListeMotsClasse *cour = df[k];
+                int numMotPrec = 0;
                 uint32_t i;
                 // boucle sur les mots du vocabulaire
                 while (mot != NULL) { 
                     for (i = numMotPrec+1; i < mot->val; i++) { // wid != 1
-                        PiFk += log(1-PCki(k, i, df, N)); 
+                        PiFk += log(1-findPCki(k, i, &cour, N)); 
                         //printf("PiFk et suiv = %f et %d\n", PiFk, cour->numMot); //DEBUG
                     }
-                    PiFk += log(PCki(k, mot->val, df, N)); 
+                    PiFk += log(findPCki(k, mot->val, &cour, N)); 
                     //printf("df[k] = %d\n", df[k]->next->next->next->numMot); //DEBUG
                     numMotPrec = mot->val;
                     mot = mot->next;
                 }
                 for (i = numMotPrec+1; i <= taille_voca; i++) { // wid != 1
-                    PiFk += log(1-PCki(k, i, df, N)); 
+                    PiFk += log(1-findPCki(k, i, &cour, N)); 
                 }
                 // on met à jour le max et son indice
                 if (max < PiFk) {
@@ -182,8 +193,8 @@ int testBernoulli(List *base_test, uint16_t N[NB_CAT],
             }
             
             // on regarde si cette estimation est bonne
-            if (k_max == num_cat) {
-                nbJuste++;
+            if (k_max != num_cat) {
+                nbErreurs++;
             }   
             
             // on libere la memoire
@@ -195,7 +206,7 @@ int testBernoulli(List *base_test, uint16_t N[NB_CAT],
     
     assert(base_test == NULL);
     
-    return nbJuste;
+    return nbErreurs;
 }
 
 int main() {
@@ -204,16 +215,19 @@ int main() {
 
     printf("\nQuestion 1 :\n");
     uint16_t nb_docs[NB_CAT];
-    taille_voca = question1(nb_docs);
+    int taille_voca;
+    {
+        taille_voca = question1(nb_docs);
 
-    printf("La taille du vocabulaire est : %d\n", taille_voca);
-    int somme_verif = 0;
-    int i;
-    for (i = 0; i < NB_CAT; i++) {
-        printf("La classe %d contient %d documents\n", i + 1, nb_docs[i]);
-        somme_verif += nb_docs[i];
+        printf("La taille du vocabulaire est : %d\n", taille_voca);
+        int somme_verif = 0;
+        int i;
+        for (i = 0; i < NB_CAT; i++) {
+            printf("La classe %d contient %d documents\n", i + 1, nb_docs[i]);
+            somme_verif += nb_docs[i];
+        }
+        assert(somme_verif == NB_TOTAL_DOCUMENTS);
     }
-    assert(somme_verif == NB_TOTAL_DOCUMENTS);
 
 
     /* Question 2 */
@@ -253,19 +267,24 @@ int main() {
 
     printf("\nQuestion 3 :\n");
     uint16_t N[NB_CAT];
-    uint16_t df[NB_CAT][taille_voca];
-    printf("DECLARATION OK\n");
+    ListeMotsClasse * df[NB_CAT];
 
-    apprentissageBernoulli(base_apprentissage, N, df);
+    apprentissageBernoulli(base_apprentissage, taille_voca, N, df);
     
     
     /* Question 4 */
 
     printf("\nQuestion 4 :\n");
-    int nbJuste = testBernoulli(base_test, N, df, m_app);
+    int nbErreurs = testBernoulli(base_test, taille_voca, N, df, m_app);
     printf("Dans la base de test du modèle multivarié de Bernoulli,\n");
-    printf("Le taux de bonne classification est de %f", (double)(100*nbJuste) / (double)m_test);
+    printf("Le taux de bonne classification est de %f", 1 - (float)((double)(100*nbErreurs) / (double)m_test));
 
+    
+    
+    int k;
+    for (k = 0; k < NB_CAT; k++) {
+        free_list2(df[k]);
+    }
 
 
     return (0);
