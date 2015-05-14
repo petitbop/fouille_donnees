@@ -82,7 +82,6 @@ void apprentissageBernoulli(List *base_app, int taille_voca, uint16_t N[NB_CAT],
             if (fscanf_value == 2) {
                 if (est_app) {
                     insererDans(&prec, &cour, num_mot);
-                    //printf("Prec et suiv = %d et %d\n", prec->numMot, cour->numMot); //DEBUG
                 }
             } else if (fscanf_value == -1) {
                 fin_de_ligne = 1;
@@ -176,9 +175,12 @@ int testBernoulli(List *base_test, int taille_voca, uint16_t N[NB_CAT],
                 while (mot != NULL) { 
                     for (i = numMotPrec+1; i < mot->val; i++) { // wid != 1
                         PiFk += log(1-findPCki(k, i, &cour, N)); 
+                        //printf("PiFk et suiv = %f et %d\n", PiFk, cour->numMot); //DEBUG
                     }
                     PiFk += log(findPCki(k, mot->val, &cour, N)); 
+                    //printf("df[k] = %d\n", df[k]->next->next->next->numMot); //DEBUG
                     numMotPrec = mot->val;
+                    mot = mot->next;
                 }
                 for (i = numMotPrec+1; i <= taille_voca; i++) { // wid != 1
                     PiFk += log(1-findPCki(k, i, &cour, N)); 
@@ -226,6 +228,7 @@ int main() {
         }
         assert(somme_verif == NB_TOTAL_DOCUMENTS);
     }
+
 
     /* Question 2 */
 
