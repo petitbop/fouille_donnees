@@ -1,64 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <time.h>
-
-const int TAILLE_APPRENTISSAGE_VOULUE = 52500;
-const int NB_TOTAL_DOCUMENTS = 70703;
-const int NB_CAT = 29;
-
-// structure de liste chainee
-
-struct list {
-    int val;
-    struct list *next;
-};
-typedef struct list List;
-
-// ajouter un element en debut de chaine
-
-List *cons(int valeur, List *liste) {
-    List *elem = malloc(sizeof (List));
-    if (NULL == elem)
-        exit(EXIT_FAILURE);
-    elem->val = valeur;
-    elem->next = liste;
-    return elem;
-}
-
-// liberer une liste
-
-void free_list(List *list) {
-    while (list != NULL) { /* tant que la liste n'est pas vide */
-        List *cell = list;
-        list = list->next;
-        free(cell);
-    }
-}
-
-// affiche les elements d'une chaine
-
-void print(List *list) {
-    int compteur = 0;
-    while (list != NULL) { /* tant que la liste n'est pas vide */
-        //printf("%i ", list->val);
-        list = list->next;
-        compteur++;
-    }
-
-    printf("Cette liste a %i elements\n", compteur);
-}
-
-// renvoie un double aleatoire compris entre 0 et 1
-
-double r2() {
-    return (double) rand() / (double) RAND_MAX;
-}
+#include "scindeur.h"
 
 // calcule la taille du vocabulaire et le nombre de documents par catégorie
 // requiert que nb_docs ait ses élements initialisés à 0
 
-void question1(int *taille_voca, int nb_docs[NB_CAT]) {
+void question1(int *taille_voca, uint16_t nb_docs[NB_CAT]) {
 
     int i;
     for (i = 0; i < NB_CAT; i++) {
@@ -100,37 +45,32 @@ void question1(int *taille_voca, int nb_docs[NB_CAT]) {
 
 // Algorithm 5: Modèle multivarié de Barnoulli, phase d'apprentissage
 
-void apprentissageBernoulli(List *base_app, int taille_voca, double Pi[NB_CAT], double PC[NB_CAT][taille_voca]) {
+void apprentissageBernoulli(List *base_app, int taille_voca, uint16_t N[NB_CAT],
+        ListeMotsClasse * df[NB_CAT]) {
 
-    int k; 
-    for (k = 0; k < NB_CAT; k++) {
-        Pi[k] = 0; // pour l'instant Pi[] = N[]    
-        int i;
-        for (i = 0; i < taille_voca; i++) {
-            PC[k][i] = 0; // pour l'instant PC[] = df[] 
-        }
-    }
-    
+    // on initialise les chaines de df avec un element de debut et de fin
+    // on initialise également les N[k] à 0
+    init(taille_voca, N, df);
+
     FILE* fichier = fopen("BaseReuters-29", "r");
-    int num_mot, nb_occur;
+    int num_cat, num_mot, nb_occur;
     int fin_de_ligne = 0;
     int fin_de_fichier = 0;
     int est_app; //fait partie ou non de la base d'apprentissage
     int fscanf_value;
-    int num_ligne = 1;
-    int num_cat;
-    int m = 0;
+    uint32_t num_ligne = 1;
 
     fscanf(fichier, "%d", &num_cat);
     while (!fin_de_fichier) {
+        ListeMotsClasse *prec = df[num_cat - 1];
+        ListeMotsClasse *cour = prec->next;
         fin_de_ligne = 0;
         if (num_ligne == base_app->val) {
             est_app = 1;
             List *cell = base_app;
             base_app = base_app->next; // on avance dans la base d'apprentissage
             free(cell);
-            m++;
-            Pi[num_cat - 1]++;     
+            N[num_cat - 1]++;
         } else {
             est_app = 0;
         }
@@ -139,7 +79,7 @@ void apprentissageBernoulli(List *base_app, int taille_voca, double Pi[NB_CAT], 
             fscanf_value = fscanf(fichier, " %d:%d", &num_mot, &nb_occur);
             if (fscanf_value == 2) {
                 if (est_app) {
-                    PC[num_cat-1][num_mot-1]++; 
+                    insererDans(prec, cour, num_mot);
                 }
             } else if (fscanf_value == -1) {
                 fin_de_ligne = 1;
@@ -149,20 +89,17 @@ void apprentissageBernoulli(List *base_app, int taille_voca, double Pi[NB_CAT], 
                 num_ligne++;
                 num_cat = num_mot;
             }
-
-
         }
     }
+
     fclose(fichier);
 
-    for (k = 0; k < NB_CAT; k++) {
-        int i;
-        for (i = 0; i < taille_voca; i++) {
-            PC[k][i] = (PC[k][i] + 1) / (Pi[k] + 2); 
-        }        
-        Pi[k] /= m;   
+    int i;
+    for (i = 0; i < NB_CAT; i++) {
+        printf("La classe %d contient %d documents et %d mots\n",
+                i + 1, N[i], count(df[i]));
     }
-    
+
     assert(base_app == NULL);
 }
 
@@ -171,7 +108,7 @@ int main() {
     /* Question 1 */
 
     printf("\nQuestion 1 :\n");
-    int nb_docs[NB_CAT];
+    uint16_t nb_docs[NB_CAT];
     int taille_voca;
     {
         question1(&taille_voca, nb_docs);
@@ -213,28 +150,25 @@ int main() {
             }
         }
         printf("Base d'apprentissage :\n");
-        print(base_apprentissage);
+        int m_app = print(base_apprentissage);
         printf("Base de test :\n");
-        print(base_test);
+        int m_test = print(base_test);
     }
 
 
     /* Question 3 */
 
     printf("\nQuestion 3 :\n");
-    double Pi[NB_CAT];
-    printf("DECLARATION 1 OK\n");
-    double PC[NB_CAT][taille_voca];
-    printf("DECLARATION 2 OK\n");
+    uint16_t N[NB_CAT];
+    ListeMotsClasse * df[NB_CAT];
 
-    apprentissageBernoulli(base_apprentissage, taille_voca, Pi, PC);
-    
-    
-    
+    apprentissageBernoulli(base_apprentissage, taille_voca, N, df);
+
+
+
 
 
     free_list(base_test);
-    free_list(base_apprentissage);
 
     return (0);
 }
