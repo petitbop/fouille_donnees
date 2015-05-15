@@ -74,7 +74,7 @@ void question2(List **base_apprentissage, List **base_test) {
 // Algorithm 5: Modèle multivarié de Barnoulli, phase d'apprentissage
 
 void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
-        ListeMotsClasse * df[NB_CAT]) {
+        uint16_t df[NB_CAT][taille_voca]) {
 
     // on initialise les chaines de df avec un element de debut et de fin
     // on initialise également les N[k] à 0
@@ -82,6 +82,7 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
 
     FILE* fichier = fopen("BaseReuters-29", "r");
     int num_cat, num_mot, nb_occur;
+    uint16_t(*dfk)[taille_voca];
     int fin_de_ligne = 0;
     int fin_de_fichier = 0;
     int est_app; //fait partie ou non de la base d'apprentissage
@@ -90,9 +91,8 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
 
     fscanf(fichier, "%d", &num_cat);
     while (!fin_de_fichier && (base_app != NULL)) {
-        ListeMotsClasse *prec = df[num_cat - 1];
-        ListeMotsClasse *cour = prec->next;
         fin_de_ligne = 0;
+        dfk = &(df[num_cat - 1]);
         if (num_ligne == base_app->val) {
             est_app = 1;
             List *cell = base_app;
@@ -107,7 +107,7 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
             fscanf_value = fscanf(fichier, " %d:%d", &num_mot, &nb_occur);
             if (fscanf_value == 2) {
                 if (est_app) {
-                    insererDans(&prec, &cour, num_mot);
+                    ((*dfk)[num_mot - 1])++;
                 }
             } else if (fscanf_value == -1) {
                 fin_de_ligne = 1;
@@ -127,14 +127,15 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
 // Algorithm 6: Modèle multivarié de Barnoulli, phase de test
 
 int testBernoulli(List *base_test, uint16_t N[NB_CAT],
-        ListeMotsClasse * df[NB_CAT], int m) {
+        uint16_t df[NB_CAT][taille_voca], int m) {
 
     // on initialise les PiF[k]
     double PiF[NB_CAT];
     initPiF(PiF, N, df, m);
 
     FILE* fichier = fopen("BaseReuters-29", "r");
-    int num_cat, num_mot, nb_occur, num_cat_prec;
+    int num_cat, num_mot, nb_occur;
+    int num_cat_prec;
     int fin_de_ligne = 0;
     int fin_de_fichier = 0;
     int est_test; //fait partie ou non de la base de test
@@ -144,7 +145,7 @@ int testBernoulli(List *base_test, uint16_t N[NB_CAT],
 
     fscanf(fichier, "%d", &num_cat);
     while (!fin_de_fichier && (base_test != NULL)) {
-        printf("Ligne %d\n", num_ligne); //DEBUG
+        //printf("Ligne %d\n", num_ligne); //DEBUG
         fin_de_ligne = 0;
         if (num_ligne == base_test->val) {
             est_test = 1;
@@ -185,12 +186,12 @@ int testBernoulli(List *base_test, uint16_t N[NB_CAT],
             for (k = 0; k < NB_CAT; k++) {
                 List *mot = motsLigne;
                 double PiFk = PiF[k];
+                uint16_t(*dfk)[taille_voca];
+                dfk = &(df[k]);
                 uint16_t Nk = N[k];
-                ListeMotsClasse *cour = df[k];
                 while (mot != NULL) {
                     // wid = 1 ; il faut mettre à jour avec la bonne valeur
-                    uint16_t dfki = findDfki(mot->val, &cour);
-                    PiFk += log((double) (dfki + 1)) - log((double) (Nk - dfki + 1));
+                    PiFk += log((double) ((*dfk)[mot->val - 1] + 1)) - log((double) (Nk - (*dfk)[mot->val - 1] + 1));
                     mot = mot->next;
                 }
                 // on met à jour le max et son indice
@@ -206,7 +207,7 @@ int testBernoulli(List *base_test, uint16_t N[NB_CAT],
             }
 
             // on libere la memoire
-            motsLigne = free_list(motsLigne);
+            free_list(motsLigne);
         }
     }
 
@@ -219,15 +220,16 @@ int testBernoulli(List *base_test, uint16_t N[NB_CAT],
 
 // Algorithm 7: Modèle multinomial, phase d'apprentissage
 
-void apprentissageMultinomial(List *base_app, uint16_t N[NB_CAT],
-        uint32_t D[NB_CAT], ListeMotsClasse * tf[NB_CAT]) {
+void apprentissageMultinomial(List *base_app, uint16_t N[NB_CAT], uint32_t D[NB_CAT],
+        uint16_t tf[NB_CAT][taille_voca]) {
 
     // on initialise les chaines de df avec un element de debut et de fin
     // on initialise également les N[k] à 0
-    init3(N, D, tf);
+    init2(N, D, tf);
 
     FILE* fichier = fopen("BaseReuters-29", "r");
     int num_cat, num_mot, nb_occur;
+    uint16_t(*tfk)[taille_voca];
     int fin_de_ligne = 0;
     int fin_de_fichier = 0;
     int est_app; //fait partie ou non de la base d'apprentissage
@@ -236,9 +238,8 @@ void apprentissageMultinomial(List *base_app, uint16_t N[NB_CAT],
 
     fscanf(fichier, "%d", &num_cat);
     while (!fin_de_fichier && (base_app != NULL)) {
-        ListeMotsClasse *prec = tf[num_cat - 1];
-        ListeMotsClasse *cour = prec->next;
         fin_de_ligne = 0;
+        tfk = &(tf[num_cat - 1]);
         if (num_ligne == base_app->val) {
             est_app = 1;
             List *cell = base_app;
@@ -253,7 +254,7 @@ void apprentissageMultinomial(List *base_app, uint16_t N[NB_CAT],
             fscanf_value = fscanf(fichier, " %d:%d", &num_mot, &nb_occur);
             if (fscanf_value == 2) {
                 if (est_app) {
-                    insererDans2(&prec, &cour, num_mot, nb_occur);
+                    (*tfk)[num_mot - 1] += nb_occur;
                     D[num_cat - 1] += nb_occur;
                 }
             } else if (fscanf_value == -1) {
@@ -274,7 +275,7 @@ void apprentissageMultinomial(List *base_app, uint16_t N[NB_CAT],
 // Algorithm 8: Modèle multinomial, phase de test
 
 int testMultinomial(List *base_test, uint16_t N[NB_CAT], uint32_t D[NB_CAT],
-        ListeMotsClasse * tf[NB_CAT], int m) {
+        uint16_t tf[NB_CAT][taille_voca], int m) {
 
     // on initialise les PiF[k]
     double PiF[NB_CAT];
@@ -284,7 +285,8 @@ int testMultinomial(List *base_test, uint16_t N[NB_CAT], uint32_t D[NB_CAT],
     }
 
     FILE* fichier = fopen("BaseReuters-29", "r");
-    int num_cat, num_mot, nb_occur, num_cat_prec;
+    int num_cat, num_mot, nb_occur;
+    int num_cat_prec;
     int fin_de_ligne = 0;
     int fin_de_fichier = 0;
     int est_test; //fait partie ou non de la base de test
@@ -294,7 +296,7 @@ int testMultinomial(List *base_test, uint16_t N[NB_CAT], uint32_t D[NB_CAT],
 
     fscanf(fichier, "%d", &num_cat);
     while (!fin_de_fichier && (base_test != NULL)) {
-        printf("Ligne %d\n", num_ligne); //DEBUG
+        //printf("Ligne %d\n", num_ligne); //DEBUG
         fin_de_ligne = 0;
         if (num_ligne == base_test->val) {
             est_test = 1;
@@ -335,12 +337,12 @@ int testMultinomial(List *base_test, uint16_t N[NB_CAT], uint32_t D[NB_CAT],
             for (k = 0; k < NB_CAT; k++) {
                 List *mot = motsLigne;
                 double PiFk = PiF[k];
-                uint16_t Dk = D[k];
-                ListeMotsClasse *cour = tf[k];
+                uint16_t(*tfk)[taille_voca];
+                tfk = &(tf[k]);
+                uint32_t Dk = D[k];
                 while (mot != NULL) {
                     // wid = 1 ; il faut mettre à jour avec la bonne valeur
-                    uint16_t tfki = findDfki(mot->val, &cour);
-                    PiFk += log((double) (tfki + 1)) - log((double) (Dk + taille_voca));
+                    PiFk += log((double) ((*tfk)[mot->val - 1] + 1)) - log((double) (Dk + taille_voca));
                     mot = mot->next;
                 }
                 // on met à jour le max et son indice
@@ -356,7 +358,7 @@ int testMultinomial(List *base_test, uint16_t N[NB_CAT], uint32_t D[NB_CAT],
             }
 
             // on libere la memoire
-            motsLigne = free_list(motsLigne);
+            free_list(motsLigne);
         }
     }
 
@@ -406,7 +408,8 @@ int main() {
 
         printf("\nQuestion 3 :\n");
         uint16_t N[NB_CAT];
-        ListeMotsClasse * df[NB_CAT];
+        uint16_t df[NB_CAT][taille_voca];
+        //printf("DECLARATION OK\n");
 
         apprentissageBernoulli(base_apprentissage, N, df);
 
@@ -418,11 +421,8 @@ int main() {
         printf("Dans la base de test du modèle multivarié de Bernoulli,\n");
         printf("Le taux de bonne classification est de %f\n", (double) (100 * nbJuste) / (double) m_test);
 
-
-        // on free df
-        free_tab(df);
     }
-    
+
     for (nb = 0; nb < 1; nb++) {
 
         /* Question 2 */
@@ -443,7 +443,8 @@ int main() {
         printf("\nQuestion 3 :\n");
         uint16_t N[NB_CAT];
         uint32_t D[NB_CAT];
-        ListeMotsClasse * tf[NB_CAT];
+        uint16_t tf[NB_CAT][taille_voca];
+        //printf("DECLARATION OK\n");
 
         apprentissageMultinomial(base_apprentissage, N, D, tf);
 
@@ -455,9 +456,6 @@ int main() {
         printf("Dans la base de test du modèle multinomial,\n");
         printf("Le taux de bonne classification est de %f\n", (double) (100 * nbJuste) / (double) m_test);
 
-
-        // on free tf
-        free_tab(tf);
     }
 
 
