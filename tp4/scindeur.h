@@ -48,12 +48,14 @@ List *inverser(List *liste) {
 
 // liberer une liste
 
-void free_list(List *list) {
+List * free_list(List *list) {
     while (list != NULL) { /* tant que la liste n'est pas vide */
         List *cell = list;
         list = list->next;
         free(cell);
     }
+    
+    return NULL;
 }
 
 // affiche les elements d'une chaine
@@ -75,7 +77,7 @@ int print(List *list) {
 
 struct list2 {
     uint32_t numMot;
-    uint8_t nbDocsClasse;
+    uint16_t nbDocsClasse;
     struct list2 *next;
 };
 typedef struct list2 ListeMotsClasse;
@@ -106,6 +108,16 @@ void cons2(uint32_t num, ListeMotsClasse *prec, ListeMotsClasse *cour) {
     elem->next = cour;
 }
 
+void cons3(uint32_t num, uint16_t nb, ListeMotsClasse *prec, ListeMotsClasse *cour) {
+    ListeMotsClasse *elem = malloc(sizeof (ListeMotsClasse));
+    if (NULL == elem)
+        exit(EXIT_FAILURE);
+    elem->numMot = num;
+    elem-> nbDocsClasse = nb;
+    prec->next = elem;
+    elem->next = cour;
+}
+
 void insererDans(ListeMotsClasse **precedent, ListeMotsClasse **courant, uint32_t num) {
     int estInsere = 0;
     ListeMotsClasse *prec = *precedent;
@@ -117,6 +129,29 @@ void insererDans(ListeMotsClasse **precedent, ListeMotsClasse **courant, uint32_
         } else {
             if (num == cour->numMot) {
                 (cour->nbDocsClasse)++;
+                estInsere = 1;
+            }
+            // on avance pour >=
+            prec = cour;
+            cour = prec->next;            
+        }
+    }
+    *precedent = prec;
+    *courant = cour; 
+}
+
+void insererDans2(ListeMotsClasse **precedent, ListeMotsClasse **courant, 
+        uint32_t num, uint16_t nb) {
+    int estInsere = 0;
+    ListeMotsClasse *prec = *precedent;
+    ListeMotsClasse *cour = *courant;
+    while(!estInsere) {
+        if (num < cour->numMot) {
+            cons3(num, nb, prec, cour);
+            estInsere = 1;
+        } else {
+            if (num == cour->numMot) {
+                cour->nbDocsClasse += nb;
                 estInsere = 1;
             }
             // on avance pour >=
@@ -203,6 +238,32 @@ void init(uint16_t N[NB_CAT], ListeMotsClasse * df[NB_CAT]) {
     }
 }
 
+// initialise N, D et df 
+void init3(uint16_t N[NB_CAT], uint32_t D[NB_CAT], ListeMotsClasse * tf[NB_CAT]) {
+    int k;
+    for (k = 0; k < NB_CAT; k++) {
+        // on initialise N avec des 0
+        N[k] = 0;
+        D[k] = 0;
+        // élément indiquant le début
+        ListeMotsClasse *elem = malloc(sizeof (ListeMotsClasse));
+        if (NULL == elem)
+            exit(EXIT_FAILURE);
+        elem->numMot = 0;
+        elem->nbDocsClasse = 0;
+        // élément indiquant la fin
+        ListeMotsClasse *elem2 = malloc(sizeof (ListeMotsClasse));
+        if (NULL == elem2)
+            exit(EXIT_FAILURE);
+        elem2->numMot = taille_voca + 1;
+        elem2->nbDocsClasse = 0;
+        // jonction des éléments
+        tf[k] = elem;
+        elem->next = elem2;
+        elem2->next = NULL;
+    }
+}
+
 void initPiF(double PiF[NB_CAT], uint16_t N[NB_CAT], ListeMotsClasse * df[NB_CAT], int m) {
     int k;
     for (k=0; k< NB_CAT ; k++) {
@@ -217,20 +278,7 @@ void initPiF(double PiF[NB_CAT], uint16_t N[NB_CAT], ListeMotsClasse * df[NB_CAT
     }
 }
 
-uint16_t max(uint16_t df[NB_CAT][taille_voca]) {
-    uint16_t max = 0;
-    int k;
-    for (k = 0; k < NB_CAT; k++) {
-        int i;
-        for (i = 0; i < taille_voca; i++) {
-            if (df[k][i] > max) {
-                max = df[k][i];
-            }
-        }
-    }
-    
-    return max;
-}
+
 
 #endif	/* SCINDEUR_H */
 
