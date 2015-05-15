@@ -13,6 +13,7 @@ const int TAILLE_APPRENTISSAGE_VOULUE = 52500;
 const int NB_TOTAL_DOCUMENTS = 70703;
 const int NB_CAT = 29;
 int taille_voca;
+const int NB_ESSAI = 20;
 
 // structure de liste chainee pour indices
 
@@ -125,7 +126,31 @@ void initPiF(double PiF[NB_CAT], uint16_t N[NB_CAT], uint16_t df[NB_CAT][taille_
     }
 }
 
+void stats(float res_tab[NB_ESSAI]) {
+     int i;
+     int N = NB_ESSAI;     
+     float Ai, S1, S2, M;
+     double V, Ec;
 
+     S1 = 0;
+     S2 = 0;
+
+     for (i=0;i<N;i++)
+     {
+         Ai = res_tab[i];
+         S1 = S1+Ai;
+         S2 = S2+Ai*Ai;
+     }
+
+     M = S1/N;
+     V = S2/N-M*M;
+     Ec = sqrt (V);
+
+     printf ("La moyenne de la serie vaut : %f\n", M);
+     printf ("La variance de la serie vaut : %lf\n", V);
+     printf ("L'ecart type de la serie vaut : %lf\n", Ec);
+
+}
 
 #endif	/* SCINDEUR_H */
 

@@ -387,8 +387,6 @@ int main() {
     assert(somme_verif == NB_TOTAL_DOCUMENTS);
 
 
-    const int NB_ESSAI = 20;
-    
     int nb;
     
     float res_binomial[NB_ESSAI];
@@ -430,6 +428,7 @@ int main() {
         free(df);
     }
     
+    
     float res_multinomial[NB_ESSAI];
     for (nb = 0; nb < NB_ESSAI; nb++) {
 
@@ -470,6 +469,14 @@ int main() {
         free(tf);
     }
 
+    
+    /* Question 5 */
+
+    printf("\nQuestion 5 :\n");
+    printf("\nRESULTAT FINAL POUR LES %d EXPERIENCES AVEC BERNOUILLI :\n", NB_ESSAI);
+    stats(res_binomial);
+    printf("\nRESULTAT FINAL POUR LES %d EXPERIENCES AVEC MULTINOMIAL :\n", NB_ESSAI);
+    stats(res_multinomial);
 
     return (0);
 }
