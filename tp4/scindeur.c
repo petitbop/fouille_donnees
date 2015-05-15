@@ -387,9 +387,12 @@ int main() {
     assert(somme_verif == NB_TOTAL_DOCUMENTS);
 
 
-
+    const int NB_ESSAI = 20;
+    
     int nb;
-    for (nb = 0; nb < 1; nb++) {
+    
+    float res_binomial[NB_ESSAI];
+    for (nb = 0; nb < NB_ESSAI; nb++) {
 
         /* Question 2 */
 
@@ -408,8 +411,9 @@ int main() {
 
         printf("\nQuestion 3 :\n");
         uint16_t N[NB_CAT];
-        uint16_t df[NB_CAT][taille_voca];
-        //printf("DECLARATION OK\n");
+        uint16_t(*df)[taille_voca];
+        df = malloc(NB_CAT * sizeof (*df));
+        printf("DECLARATION OK\n");
 
         apprentissageBernoulli(base_apprentissage, N, df);
 
@@ -419,11 +423,15 @@ int main() {
         printf("\nQuestion 4 :\n");
         int nbJuste = testBernoulli(base_test, N, df, m_app);
         printf("Dans la base de test du modèle multivarié de Bernoulli,\n");
-        printf("Le taux de bonne classification est de %f\n", (double) (100 * nbJuste) / (double) m_test);
-
+        float taux = (double) (100 * nbJuste) / (double) m_test;
+        printf("Le taux de bonne classification est de %f\n", taux);
+        res_binomial[nb] = taux;
+        
+        free(df);
     }
-
-    for (nb = 0; nb < 1; nb++) {
+    
+    float res_multinomial[NB_ESSAI];
+    for (nb = 0; nb < NB_ESSAI; nb++) {
 
         /* Question 2 */
 
@@ -443,8 +451,9 @@ int main() {
         printf("\nQuestion 3 :\n");
         uint16_t N[NB_CAT];
         uint32_t D[NB_CAT];
-        uint16_t tf[NB_CAT][taille_voca];
-        //printf("DECLARATION OK\n");
+        uint16_t(*tf)[taille_voca];
+        tf = malloc(NB_CAT * sizeof (*tf));
+        printf("DECLARATION OK\n");
 
         apprentissageMultinomial(base_apprentissage, N, D, tf);
 
@@ -454,8 +463,11 @@ int main() {
         printf("\nQuestion 4 :\n");
         int nbJuste = testMultinomial(base_test, N, D, tf, m_app);
         printf("Dans la base de test du modèle multinomial,\n");
-        printf("Le taux de bonne classification est de %f\n", (double) (100 * nbJuste) / (double) m_test);
+        float taux = (double) (100 * nbJuste) / (double) m_test;
+        printf("Le taux de bonne classification est de %f\n", taux);
+        res_multinomial[nb] = taux;
 
+        free(tf);
     }
 
 
