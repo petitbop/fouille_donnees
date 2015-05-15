@@ -93,7 +93,7 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
     }
 
     fclose(fichier);
-    
+    printf("fin apprentissage Bernoulli");
     assert(base_app == NULL);
 }
 
@@ -162,6 +162,7 @@ int testBernoulli(List *base_test, uint16_t N[NB_CAT],
                 uint32_t i;
                 // boucle sur les mots du vocabulaire
                 while (mot != NULL) { 
+
                     for (i = numMotPrec+1; i < mot->val; i++) { // wid != 1
                         PiFk += log(1-PCki(k, i, df, N)); 
                         //printf("PiFk et suiv = %f et %d\n", PiFk, cour->numMot); //DEBUG
