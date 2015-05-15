@@ -122,7 +122,7 @@ double r2() {
 }
 
 // initialise N et df 
-void init(int taille_voca, uint16_t N[NB_CAT], uint16_t df[NB_CAT][taille_voca]) {
+void init(uint16_t N[NB_CAT], uint16_t df[NB_CAT][taille_voca]) {
     int k;
     for (k = 0; k < NB_CAT; k++) {
         // on initialise N avec des 0

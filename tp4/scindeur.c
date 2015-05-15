@@ -52,7 +52,7 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
 
     // on initialise les chaines de df avec un element de debut et de fin
     // on initialise également les N[k] à 0
-    init(taille_voca, N, df);
+    init(N, df);
 
     FILE* fichier = fopen("BaseReuters-29", "r");
     int num_cat, num_mot, nb_occur;
