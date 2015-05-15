@@ -1,0 +1,165 @@
+\documentclass[a4paper, 12pt]{article}
+
+
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[usenames,dvipsnames]{xcolor}
+
+
+\setcounter{secnumdepth}{4}
+% TAILLE DES PAGES (A4 serré)
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1ex}
+\setlength{\textwidth}{17cm}
+\setlength{\textheight}{24cm}
+\setlength{\oddsidemargin}{-.7cm}
+\setlength{\evensidemargin}{-.7cm}
+\setlength{\topmargin}{-.5in}
+
+% Commandes de mise en page
+\newcommand{\fichier}[1]{\emph{#1}}
+\newcommand{\nom}[1]{\emph{#1}}
+\newcommand{\Fig}[1]{Fig \ref{#1} p. \pageref{#1}}
+\newcommand{\itemi}{\item[$\bullet$]}
+
+% Commandes de maths
+\newcommand{\fonction}[3]{#1 : #2 \to #3}
+\newcommand{\intr}[2]{\left[ #1 ; #2 \right]}
+\newcommand{\intn}[2]{\left[\![ #1 ; #2 \right]\!]}
+\newcommand{\intro}[2]{\left] #1 ; #2 \right[}
+\newcommand{\intrsod}[2]{\left[ #1 ; #2 \right[}
+\newcommand{\ps}[2]{\langle #1, #2 \rangle}
+\newcommand{\mdelta}[1]{\boldsymbol{\delta_{#1}}}
+%% \newcommand{\mdelta}[1]{\delta_{\textbf{#1}}}
+
+\pagenumbering{arabic}
+\graphicspath{{images/}}
+
+\title{Fouille de données TP4 : Classification documentaire} 
+\author{Pierre Petitbon \and Florian Privé \and Xinrui Xu}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}
+\setlength{\itemsep}{20pt}
+
+\item[Q1)] 
+Nous avons un fichier contenant, sur chaque ligne, un vecteur correspondant à chaque document. Chaque composante $i$ d'un vecteur correspond au nombre d'occurrence du $i^{ème}$ mot du vocabulaire. Pour optimiser l'espace de stockage, ce vecteur est codé dans le fichier sous la forme indice-valeur qui consiste à obtenir une représentation compacte des vecteurs de documents en ne codant que les mots qui sont présents dans le document ainsi que le nombre d'occurrence associé à ce mot. 
+
+Ainsi, pour trouver la taille du vocabulaire, il faut écrire un parser qui lit les indices présents dans chaque vecteur et trouver le maximum de ces indices. Le plus grand des indices correspond au nombre de mots différents qui sont présents dans l'ensemble des documents de la base. On obtient ainsi la taille du vocabulaire : 
+\begin{math}|V| = 141144 \end{math}
+\\
+Le premier nombre de chaque ligne correspond à la classe à laquelle appartient ce document. Pour trouver le nombre de documents dans une classe $k$, il suffit de compter le nombre de lignes commençant par $k$. On obtient ainsi : 
+\\
+\\
+\begin{center}
+\begin{tabular}{|l|c|r|}
+	\hline
+   classe & nombre de documents \\
+   \hline
+   1 & 5894 \\
+   \hline
+   2 & 1003 \\
+   \hline
+   3 & 2472 \\
+   \hline
+   4 & 2207 \\
+   \hline
+   5 & 6010 \\
+   \hline
+   6 & 2992 \\
+   \hline
+   7 & 1586 \\
+   \hline
+   8 & 1226 \\
+   \hline
+   9 & 2007 \\
+   \hline
+   10 & 3982 \\
+   \hline
+   11 & 7757 \\
+   \hline
+   12 & 3644 \\
+   \hline
+   13 & 3405 \\
+   \hline
+   14 & 2307 \\
+   \hline
+   15 & 1040 \\
+   \hline
+   16 & 1460 \\
+   \hline
+   17 & 1191 \\
+   \hline
+   18 & 1733 \\
+   \hline
+   19 & 4745 \\
+   \hline
+   20 & 1411 \\
+   \hline
+   21 & 1016 \\
+   \hline
+   22 & 3018 \\
+   \hline
+    \end{tabular}
+   
+  \begin{tabular}{|l|c|r|}
+  \hline
+  classe & nombre de documents \\
+  \hline
+   23 & 1050 \\
+   \hline
+   24 & 1184 \\
+   \hline
+   25 & 1624 \\
+   \hline
+   26 & 1296 \\
+   \hline
+   27 & 1018 \\
+   \hline
+   28 & 1049 \\
+   \hline
+   29 & 1376 \\
+   \hline
+\end{tabular}
+\end{center}
+
+
+\item[Q2)] 
+On veut scinder aléatoirement les $70703$ documents en deux ensembles :
+\begin{itemize}
+\item base d'entraînement ($52500$ documents) 
+\item base de test ($18203$ documents)
+\\
+\\
+Soit $ratio = \frac{52500}{70703}$ \\
+On va tirer, en suivant une lui uniforme[0,1], une valeur $r$, pour chaque document $di$ :
+\item Si $r<ratio$ on place le document $di$ dans la base apprentissage.
+\item Sinon on le place dans la base test.
+\end{itemize}
+
+\item[Q3)]
+\begin{itemize}
+\item Le modèle de Bernouilli : \\
+Le modèle a pour paramètre :\\
+ 
+\end{itemize}
+
+\end{enumerate}
+
+\end{document}
+
+

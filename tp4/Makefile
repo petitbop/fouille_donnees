@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-W -Wall 
 LDFLAGS=
-EXEC=scindeur lirefichier
+EXEC=scindeur lirefichier bernouilli
 
 all: $(EXEC)
 
@@ -12,7 +12,7 @@ lirefichier.o: lirefichier.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:
-	rm -rf *.o
+	rm -rf *.o 
 
 mrproper: clean
 	rm -rf $(EXEC)
