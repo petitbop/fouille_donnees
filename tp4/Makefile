@@ -1,9 +1,15 @@
 CC=gcc
-CFLAGS=-W -Wall 
-LDFLAGS=
+CFLAGS=-W -Wall -g
+LDFLAGS=-lm
 EXEC=scindeur lirefichier
 
 all: $(EXEC)
+
+scindeur: scindeur.o
+	$(CC) -o $@ $< $(LDFLAGS)
+
+lirefichier: lirefichier.o
+	$(CC) -o $@ $< $(LDFLAGS)
 
 scindeur.o: scindeur.c
 	$(CC) -o $@ -c $< $(CFLAGS)
