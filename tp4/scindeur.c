@@ -56,6 +56,7 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
 
     FILE* fichier = fopen("BaseReuters-29", "r");
     int num_cat, num_mot, nb_occur;
+    uint16_t (*dfk)[taille_voca];
     int fin_de_ligne = 0;
     int fin_de_fichier = 0;
     int est_app; //fait partie ou non de la base d'apprentissage
@@ -64,7 +65,9 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
 
     fscanf(fichier, "%d", &num_cat);
     while (!fin_de_fichier) {
+        //printf("1  "); //DEBUG
         fin_de_ligne = 0;
+        dfk = &(df[num_cat-1]);
         if (num_ligne == base_app->val) {
             est_app = 1;
             List *cell = base_app;
@@ -77,9 +80,12 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
 
         while (!fin_de_ligne) {
             fscanf_value = fscanf(fichier, " %d:%d", &num_mot, &nb_occur);
+            //printf("2  "); //DEBUG
             if (fscanf_value == 2) {
                 if (est_app) {
-                    df[num_cat-1][num_mot-1]++;
+                    //printf("5  "); //DEBUG
+                    ((*dfk)[num_mot-1])++;
+                    //printf("6  "); //DEBUG
                 }
             } else if (fscanf_value == -1) {
                 fin_de_ligne = 1;
@@ -89,11 +95,13 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
                 num_ligne++;
                 num_cat = num_mot;
             }
+            //printf("3  "); //DEBUG
         }
+        //printf("4  "); //DEBUG
     }
 
     fclose(fichier);
-    
+    //printf("5  "); //DEBUG
     assert(base_app == NULL);
 }
 
@@ -159,20 +167,24 @@ int testBernoulli(List *base_test, uint16_t N[NB_CAT],
                 List *mot = motsLigne;
                 uint32_t numMotPrec = 0;
                 double PiFk = PiF[k];
+                uint16_t (*dfk)[taille_voca];
+                dfk = &(df[k]);
+                uint16_t Nk = N[k];
                 uint32_t i;
                 // boucle sur les mots du vocabulaire
                 while (mot != NULL) { 
+                    //printf("mot numéro = %d\n", mot->val); //DEBUG
                     for (i = numMotPrec+1; i < mot->val; i++) { // wid != 1
-                        PiFk += log(1-PCki(k, i, df, N)); 
+                        PiFk += log(1- ((double)((*dfk)[i-1]+1) / (double)(Nk+2)) ); 
                         //printf("PiFk et suiv = %f et %d\n", PiFk, cour->numMot); //DEBUG
                     }
-                    PiFk += log(PCki(k, mot->val, df, N)); 
+                    PiFk += log( ((double)((*dfk)[mot->val-1]+1) / (double)(Nk+2)) ); 
                     //printf("df[k] = %d\n", df[k]->next->next->next->numMot); //DEBUG
                     numMotPrec = mot->val;
                     mot = mot->next;
                 }
                 for (i = numMotPrec+1; i <= taille_voca; i++) { // wid != 1
-                    PiFk += log(1-PCki(k, i, df, N)); 
+                    PiFk += log(1- ((double)((*dfk)[i-1]+1) / (double)(Nk+2)) ); 
                 }
                 // on met à jour le max et son indice
                 if (max < PiFk) {

@@ -90,10 +90,6 @@ void cons2(uint32_t num, ListeMotsClasse *prec, ListeMotsClasse *cour) {
     elem->next = cour;
 }
 
-double PCki(int k, uint32_t num, uint16_t df[NB_CAT][taille_voca], uint16_t N[NB_CAT]) {    
-    return((double)(df[k][num-1]+1) / (double)(N[k]+2));  
-}
-
 // compte le nombre d'éléments
 int count(ListeMotsClasse *list) {
     int compteur = 0;
