@@ -74,7 +74,7 @@ void question2 (List **base_apprentissage, List **base_test) {
 // Algorithm 5: Modèle multivarié de Barnoulli, phase d'apprentissage
 
 void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
-        ListeMotsClasse * df[NB_CAT]) {
+        uint16_t df[NB_CAT][taille_voca]) {
 
     // on initialise les chaines de df avec un element de debut et de fin
     // on initialise également les N[k] à 0
@@ -82,6 +82,7 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
 
     FILE* fichier = fopen("BaseReuters-29", "r");
     int num_cat, num_mot, nb_occur;
+    uint16_t (*dfk)[taille_voca];
     int fin_de_ligne = 0;
     int fin_de_fichier = 0;
     int est_app; //fait partie ou non de la base d'apprentissage
@@ -89,10 +90,9 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
     uint32_t num_ligne = 1;
 
     fscanf(fichier, "%d", &num_cat);
-    while (!fin_de_fichier && (base_app != NULL)) {    
-        ListeMotsClasse *prec = df[num_cat - 1];
-        ListeMotsClasse *cour = prec->next;
+    while (!fin_de_fichier && (base_app != NULL)) {
         fin_de_ligne = 0;
+        dfk = &(df[num_cat-1]);
         if (num_ligne == base_app->val) {
             est_app = 1;
             List *cell = base_app;
@@ -107,7 +107,7 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
             fscanf_value = fscanf(fichier, " %d:%d", &num_mot, &nb_occur);
             if (fscanf_value == 2) {
                 if (est_app) {
-                    insererDans(&prec, &cour, num_mot);
+                    ((*dfk)[num_mot-1])++;
                 }
             } else if (fscanf_value == -1) {
                 fin_de_ligne = 1;
@@ -127,7 +127,7 @@ void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
 // Algorithm 6: Modèle multivarié de Barnoulli, phase de test
 
 int testBernoulli(List *base_test, uint16_t N[NB_CAT],
-        ListeMotsClasse * df[NB_CAT], int m) {
+        uint16_t df[NB_CAT][taille_voca], int m) {
 
     // on initialise les PiF[k]
     double PiF[NB_CAT];
@@ -144,7 +144,7 @@ int testBernoulli(List *base_test, uint16_t N[NB_CAT],
 
     fscanf(fichier, "%d", &num_cat);
     while (!fin_de_fichier && (base_test != NULL)) {
-        printf("Ligne %d\n", num_ligne); //DEBUG
+        //printf("Ligne %d\n", num_ligne); //DEBUG
         fin_de_ligne = 0;
         if (num_ligne == base_test->val) {
             est_test = 1;
@@ -183,13 +183,12 @@ int testBernoulli(List *base_test, uint16_t N[NB_CAT],
             for (k = 0; k < NB_CAT; k++) {
                 List *mot = motsLigne;
                 double PiFk = PiF[k]; 
+                uint16_t (*dfk)[taille_voca];
+                dfk = &(df[k]);
                 uint16_t Nk = N[k];
-                ListeMotsClasse *cour = df[k];
-                //int taille_dfk = print2(df[k]); //DEBUG
                 while (mot != NULL) { 
                     // wid = 1 ; il faut mettre à jour avec la bonne valeur
-                    uint16_t dfki = findDfki(mot->val, &cour);
-                    PiFk += log( (double)(dfki + 1) / (double)(Nk - dfki + 1) );
+                    PiFk += log( (double)((*dfk)[mot->val-1] + 1) / (double)(Nk - (*dfk)[mot->val-1] + 1) );
                     mot = mot->next;
                 }
                 // on met à jour le max et son indice
@@ -255,10 +254,13 @@ int main() {
 
     printf("\nQuestion 3 :\n");
     uint16_t N[NB_CAT];
-    ListeMotsClasse * df[NB_CAT];
+    uint16_t df[NB_CAT][taille_voca];
+    //printf("DECLARATION OK\n");
 
     apprentissageBernoulli(base_apprentissage, N, df);
     
+    //uint16_t maxdf = max(df);
+    //printf("Le max de df est %d\n", maxdf);
     
     /* Question 4 */
 
@@ -267,9 +269,6 @@ int main() {
     printf("Dans la base de test du modèle multivarié de Bernoulli,\n");
     printf("Le taux de bonne classification est de %f\n", (double)(100*nbJuste) / (double)m_test);
 
-
-    // on free df
-    free_tab(df);
     }
 
 
