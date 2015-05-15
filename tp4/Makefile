@@ -1,15 +1,16 @@
 CC=gcc
-CFLAGS=-W -Wall -lm
-LDFLAGS=
-EXEC=scindeur 
+CFLAGS=-W -Wall -g
+LDFLAGS=-lm
+EXEC=scindeur
 
 all: $(EXEC)
 
-scindeur: scindeur.o 
-	$(CC) scindeur.o -o $(EXEC) 
-	
-scindeur.o: scindeur.c scindeur.h
-	$(CC) -c $(CFLAGS) scindeur.c 
+scindeur: scindeur.o
+	$(CC) -o $@ $< $(LDFLAGS)
+
+
+scindeur.o: scindeur.c
+	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:
 	rm -rf *.o
