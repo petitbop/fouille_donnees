@@ -13,6 +13,7 @@ const int TAILLE_APPRENTISSAGE_VOULUE = 52500;
 const int NB_TOTAL_DOCUMENTS = 70703;
 const int NB_CAT = 29;
 int taille_voca;
+const int NB_ESSAI = 20;
 
 // structure de liste chainee pour indices
 
@@ -34,6 +35,7 @@ List *cons(uint32_t valeur, List *liste) {
 }
 
 // inverser l'ordre d'une liste
+
 List *inverser(List *liste) {
     List *liste_inv = NULL;
     while (liste != NULL) {
@@ -42,7 +44,7 @@ List *inverser(List *liste) {
         liste_inv = liste;
         liste = next;
     }
-    
+
     return liste_inv;
 }
 
@@ -54,7 +56,7 @@ List * free_list(List *list) {
         list = list->next;
         free(cell);
     }
-    
+
     return NULL;
 }
 
@@ -69,143 +71,10 @@ int print(List *list) {
     }
 
     printf("Cette liste contient %i elements\n", compteur);
-    
-    return compteur;
-}
-
-// structure de liste chainee pour mots d'une classe
-
-struct list2 {
-    uint32_t numMot;
-    uint16_t nbDocsClasse;
-    struct list2 *next;
-};
-typedef struct list2 ListeMotsClasse;
-
-int print2(ListeMotsClasse *list) {
-    int compteur = 0;
-    printf("Cette liste contient :\n");
-    while (list != NULL) { /* tant que la liste n'est pas vide */
-        printf("%i ", list->numMot);
-        list = list->next;
-        compteur++;
-    }
-
-    printf("\nCette liste contient %i elements\n", compteur);
-    
-    return compteur;
-}
-
-// ajouter un element entre prec et cour, renvoie cour
-
-void cons2(uint32_t num, ListeMotsClasse *prec, ListeMotsClasse *cour) {
-    ListeMotsClasse *elem = malloc(sizeof (ListeMotsClasse));
-    if (NULL == elem)
-        exit(EXIT_FAILURE);
-    elem->numMot = num;
-    elem-> nbDocsClasse = 1;
-    prec->next = elem;
-    elem->next = cour;
-}
-
-void cons3(uint32_t num, uint16_t nb, ListeMotsClasse *prec, ListeMotsClasse *cour) {
-    ListeMotsClasse *elem = malloc(sizeof (ListeMotsClasse));
-    if (NULL == elem)
-        exit(EXIT_FAILURE);
-    elem->numMot = num;
-    elem-> nbDocsClasse = nb;
-    prec->next = elem;
-    elem->next = cour;
-}
-
-void insererDans(ListeMotsClasse **precedent, ListeMotsClasse **courant, uint32_t num) {
-    int estInsere = 0;
-    ListeMotsClasse *prec = *precedent;
-    ListeMotsClasse *cour = *courant;
-    while(!estInsere) {
-        if (num < cour->numMot) {
-            cons2(num, prec, cour);
-            estInsere = 1;
-        } else {
-            if (num == cour->numMot) {
-                (cour->nbDocsClasse)++;
-                estInsere = 1;
-            }
-            // on avance pour >=
-            prec = cour;
-            cour = prec->next;            
-        }
-    }
-    *precedent = prec;
-    *courant = cour; 
-}
-
-void insererDans2(ListeMotsClasse **precedent, ListeMotsClasse **courant, 
-        uint32_t num, uint16_t nb) {
-    int estInsere = 0;
-    ListeMotsClasse *prec = *precedent;
-    ListeMotsClasse *cour = *courant;
-    while(!estInsere) {
-        if (num < cour->numMot) {
-            cons3(num, nb, prec, cour);
-            estInsere = 1;
-        } else {
-            if (num == cour->numMot) {
-                cour->nbDocsClasse += nb;
-                estInsere = 1;
-            }
-            // on avance pour >=
-            prec = cour;
-            cour = prec->next;            
-        }
-    }
-    *precedent = prec;
-    *courant = cour; 
-}
-
-uint16_t findDfki(uint32_t num, ListeMotsClasse **courant) {
-    ListeMotsClasse *cour = *courant;
-    while(1) {
-        if (num < cour->numMot) {
-            *courant = cour; 
-            return 0;
-        } else {
-            if (num == cour->numMot) {
-                *courant = cour->next; 
-                return (cour->nbDocsClasse);
-            }
-            cour = cour->next;            
-        }
-    }    
-}
-
-// compte le nombre d'éléments
-int count(ListeMotsClasse *list) {
-    int compteur = 0;
-    while (list != NULL) { /* tant que la liste n'est pas vide */
-        list = list->next;
-        compteur++;
-    }
 
     return compteur;
 }
 
-// liberer une liste
-
-void free_list2(ListeMotsClasse *list) {
-    while (list != NULL) { /* tant que la liste n'est pas vide */
-        ListeMotsClasse *cell = list;
-        list = list->next;
-        free(cell);
-    }
-}
-
-void free_tab(ListeMotsClasse * tab[NB_CAT]) {
-    int k;
-    for (k=0; k < NB_CAT; k++) {
-        free_list2(tab[k]);
-    }
-}
 
 // renvoie un double aleatoire compris entre 0 et 1
 
@@ -214,71 +83,74 @@ double r2() {
 }
 
 // initialise N et df 
-void init(uint16_t N[NB_CAT], ListeMotsClasse * df[NB_CAT]) {
+
+void init(uint16_t N[NB_CAT], uint16_t df[NB_CAT][taille_voca]) {
     int k;
     for (k = 0; k < NB_CAT; k++) {
         // on initialise N avec des 0
         N[k] = 0;
-        // élément indiquant le début
-        ListeMotsClasse *elem = malloc(sizeof (ListeMotsClasse));
-        if (NULL == elem)
-            exit(EXIT_FAILURE);
-        elem->numMot = 0;
-        elem->nbDocsClasse = 0;
-        // élément indiquant la fin
-        ListeMotsClasse *elem2 = malloc(sizeof (ListeMotsClasse));
-        if (NULL == elem2)
-            exit(EXIT_FAILURE);
-        elem2->numMot = taille_voca + 1;
-        elem2->nbDocsClasse = 0;
-        // jonction des éléments
-        df[k] = elem;
-        elem->next = elem2;
-        elem2->next = NULL;
+        int i;
+        for (i = 0; i < taille_voca; i++) {
+            df[k][i] = 0;
+        }
     }
 }
 
 // initialise N, D et df 
-void init3(uint16_t N[NB_CAT], uint32_t D[NB_CAT], ListeMotsClasse * tf[NB_CAT]) {
+
+void init2(uint16_t N[NB_CAT], uint32_t D[NB_CAT], uint16_t tf[NB_CAT][taille_voca]) {
     int k;
     for (k = 0; k < NB_CAT; k++) {
         // on initialise N avec des 0
         N[k] = 0;
         D[k] = 0;
-        // élément indiquant le début
-        ListeMotsClasse *elem = malloc(sizeof (ListeMotsClasse));
-        if (NULL == elem)
-            exit(EXIT_FAILURE);
-        elem->numMot = 0;
-        elem->nbDocsClasse = 0;
-        // élément indiquant la fin
-        ListeMotsClasse *elem2 = malloc(sizeof (ListeMotsClasse));
-        if (NULL == elem2)
-            exit(EXIT_FAILURE);
-        elem2->numMot = taille_voca + 1;
-        elem2->nbDocsClasse = 0;
-        // jonction des éléments
-        tf[k] = elem;
-        elem->next = elem2;
-        elem2->next = NULL;
+        int i;
+        for (i = 0; i < taille_voca; i++) {
+            tf[k][i] = 0;
+        }
     }
 }
 
-void initPiF(double PiF[NB_CAT], uint16_t N[NB_CAT], ListeMotsClasse * df[NB_CAT], int m) {
+void initPiF(double PiF[NB_CAT], uint16_t N[NB_CAT], uint16_t df[NB_CAT][taille_voca], int m) {
     int k;
-    for (k=0; k< NB_CAT ; k++) {
-        PiF[k] = log((double)N[k] / (double)m);
-        ListeMotsClasse *cour = df[k];
+    for (k = 0; k < NB_CAT; k++) {
+        PiF[k] = log((double) N[k] / (double) m);
+        uint16_t(*dfk)[taille_voca];
+        dfk = &(df[k]);
         uint16_t Nk = N[k];
         int i;
-        for(i = 0; i < taille_voca; i++) {
-            PiF[k] += log( (double)(Nk - findDfki(i, &cour) + 1) );
+        for (i = 0; i < taille_voca; i++) {
+            PiF[k] += log((double) (Nk - (*dfk)[i - 1] + 1));
         }
-        PiF[k] -= taille_voca * log((double)(Nk + 2));
+        PiF[k] -= taille_voca * log((double) (Nk + 2));
     }
 }
 
+void stats(float res_tab[NB_ESSAI]) {
+     int i;
+     int N = NB_ESSAI;     
+     float Ai, S1, S2, M;
+     double V, Ec;
 
+     S1 = 0;
+     S2 = 0;
+
+     for (i=0;i<N;i++)
+     {
+         Ai = res_tab[i];
+         S1 = S1+Ai;
+         S2 = S2+Ai*Ai;
+     }
+
+     M = S1/N;
+     V = S2/N-M*M;
+     Ec = sqrt (V);
+
+     printf ("La moyenne de la serie vaut : %f\n", M);
+     printf ("La variance de la serie vaut : %lf\n", V);
+     printf ("L'ecart type de la serie vaut : %lf\n", Ec);
+
+}
 
 #endif	/* SCINDEUR_H */
 

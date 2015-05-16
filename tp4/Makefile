@@ -1,14 +1,15 @@
 CC=gcc
-CFLAGS=-W -Wall 
-LDFLAGS=
-EXEC=scindeur lirefichier bernouilli
+CFLAGS=-W -Wall -g
+LDFLAGS=-lm
+EXEC=scindeur bernouilli
 
 all: $(EXEC)
 
-scindeur.o: scindeur.c
-	$(CC) -o $@ -c $< $(CFLAGS)
+scindeur: scindeur.o
+	$(CC) -o $@ $< $(LDFLAGS)
 
-lirefichier.o: lirefichier.c
+
+scindeur.o: scindeur.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:

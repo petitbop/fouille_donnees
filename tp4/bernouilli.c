@@ -116,16 +116,16 @@ void question2 (uint32_t *nb_docs_app, uint32_t* nb_docs_test) {
 
     }    
 
-    void CalculeParam(uint32_t **teta, uint32_t *pi, int taille_voca, uint32_t **df, uint32_t N[NB_CAT]){
+    void CalculeParam(double **teta, double *pi, int taille_voca, uint32_t **df, uint32_t N[NB_CAT], uint32_t nb_docs_app){
         for(int i=0; i<NB_CAT; i++){
-            pi[i]=N[i]/NB_TOTAL_DOCUMENTS;
+            pi[i]=(double)N[i]/(double)nb_docs_app;
             for(int j=0; j<taille_voca; j++){
-                teta[i][j]=(df[i][j]+1)/(N[i]+2);
+                teta[i][j]=((double)(df[i][j]+1))/((double)(N[i]+2));
             }
         }
     }
 
-    void MotPresentAbsent(bool **MotPresentAbsent){
+    void MotPresentAbsent(bool **MotPresentAbsent, int* classe){
         FILE* fichier_test = fopen("base_test", "r");
         
         int num_cat, num_mot, nb_occur;
@@ -135,6 +135,7 @@ void question2 (uint32_t *nb_docs_app, uint32_t* nb_docs_test) {
         uint32_t num_ligne = 0;
 
         fscanf(fichier_test, "%d", &num_cat);
+        classe[num_ligne]=num_cat;
         while (!fin_de_fichier) {   
             fin_de_ligne = 0;
             while (!fin_de_ligne) {
@@ -147,7 +148,11 @@ void question2 (uint32_t *nb_docs_app, uint32_t* nb_docs_test) {
                 } else { // on a lu la categorie de la prochaine ligne
                     fin_de_ligne = 1;
                     num_ligne++;
+                    num_cat = num_mot;
                 }
+            }
+            if(!fin_de_fichier){
+                classe[num_ligne]=num_cat;
             }
         }
 
@@ -155,7 +160,7 @@ void question2 (uint32_t *nb_docs_app, uint32_t* nb_docs_test) {
     }
 
     void Vraisemblance( double **VraisemblanceTab, 
-                        uint32_t **teta, uint32_t *pi, bool **MotPresentAbsent, 
+                        double **teta, double *pi, bool **MotPresentAbsent, 
                         uint32_t nb_docs_test, 
                         int taille_voca){
 
@@ -189,6 +194,16 @@ void question2 (uint32_t *nb_docs_app, uint32_t* nb_docs_test) {
         }
 
     }
+
+    double TauxBonneClassification(int *ClassePredite, int *Classe, uint32_t nb_docs_test){
+        double nb_correct = 0;
+        for (uint32_t i=0; i<nb_docs_test; i++){
+            if(ClassePredite[i]==Classe[i]){
+                nb_correct++;
+            }
+        }
+        return nb_correct/(double)nb_docs_test;
+     }
 
 int main() {
 
@@ -239,14 +254,15 @@ int main() {
 
     apprentissageBernouilli(df, N);
 
-    uint32_t * teta[NB_CAT];
+    double * teta[NB_CAT];
     for (int i=0; i<NB_CAT; i++){
-        teta[i]=malloc(taille_voca*sizeof(uint32_t));
+        teta[i]=malloc(taille_voca*sizeof(double));
     }
 
-    uint32_t pi[NB_CAT];
+    double pi[NB_CAT];
 
-    CalculeParam(teta, pi, taille_voca, df, N);
+    CalculeParam(teta, pi, taille_voca, df, N, nb_docs_app);
+
 
     /* Question 4 */
     printf("\nQuestion 4 :\n");
@@ -263,7 +279,9 @@ int main() {
         }
     }
 
-    MotPresentAbsent(MotPresentAbsentTab);
+    int *classe = malloc(nb_docs_test*sizeof(int));
+
+    MotPresentAbsent(MotPresentAbsentTab, classe);
 
     printf("fin MotPresentAbsent\n");
     double *VraisemblanceTab[NB_CAT];
@@ -283,6 +301,8 @@ int main() {
     printf("fin Vraisemblance\n");
     MaxVraisemblance(VraisemblanceTab, ClassePredite, nb_docs_test);
     printf("fin MaxVraisemblance\n");
+    double taux = TauxBonneClassification(ClassePredite, classe, nb_docs_test);
+    printf("Taux de bonne classification = %f\n", taux);
 
     return (0);
 }
