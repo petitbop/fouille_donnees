@@ -42,6 +42,8 @@ int question1(uint16_t nb_docs[NB_CAT]) {
     return max;
 }
 
+// construit la base d'apprentissage et la base de test aléatoirement
+
 void question2(List **base_apprentissage, List **base_test) {
     List *base_app = *base_apprentissage;
     List *base_t = *base_test;
@@ -76,8 +78,7 @@ void question2(List **base_apprentissage, List **base_test) {
 void apprentissageBernoulli(List *base_app, uint16_t N[NB_CAT],
         uint16_t** df) {
 
-    // on initialise les chaines de df avec un element de debut et de fin
-    // on initialise également les N[k] à 0
+    // on initialise également les N[k] et les df[k][i] à 0
     init(N, df);
 
     FILE* fichier = fopen("BaseReuters-29", "r");
@@ -386,14 +387,16 @@ int main() {
     }
     assert(somme_verif == NB_TOTAL_DOCUMENTS);
 
-    uint16_t** df = malloc(sizeof(uint16_t*)*NB_CAT);
-    for (i = 0; i < NB_CAT; i++) {
-      df[i] = malloc(sizeof(uint16_t)*taille_voca);
-    }
 
     int nb;
-    
-    float res_binomial[NB_ESSAI];
+
+    float res_bernoulli[NB_ESSAI];
+    // on alloue de l'espace dans le tas pour df
+    uint16_t** df = malloc(sizeof (uint16_t*) * NB_CAT);
+    for (i = 0; i < NB_CAT; i++) {
+        df[i] = malloc(sizeof (uint16_t) * taille_voca);
+    }
+
     for (nb = 0; nb < NB_ESSAI; nb++) {
 
         /* Question 2 */
@@ -425,15 +428,16 @@ int main() {
         printf("Dans la base de test du modèle multivarié de Bernoulli,\n");
         float taux = (double) (100 * nbJuste) / (double) m_test;
         printf("Le taux de bonne classification est de %f\n", taux);
-        res_binomial[nb] = taux;
-        
+        res_bernoulli[nb] = taux;
+
     }
-    
-    
+
+
     float res_multinomial[NB_ESSAI];
-    uint16_t** tf = malloc(sizeof(uint16_t*)*NB_CAT);
+    // on alloue de l'espace dans le tas pour df
+    uint16_t** tf = malloc(sizeof (uint16_t*) * NB_CAT);
     for (i = 0; i < NB_CAT; i++) {
-      tf[i] = malloc(sizeof(uint16_t)*taille_voca);
+        tf[i] = malloc(sizeof (uint16_t) * taille_voca);
     }
 
     for (nb = 0; nb < NB_ESSAI; nb++) {
@@ -471,18 +475,19 @@ int main() {
 
     }
 
-    
+
     /* Question 5 */
 
     printf("\nQuestion 5 :\n");
     printf("\nRESULTAT FINAL POUR LES %d EXPERIENCES AVEC BERNOUILLI :\n", NB_ESSAI);
-    stats(res_binomial);
+    stats(res_bernoulli);
     printf("\nRESULTAT FINAL POUR LES %d EXPERIENCES AVEC MULTINOMIAL :\n", NB_ESSAI);
     stats(res_multinomial);
 
+    // on libere la memoire
     for (i = 0; i < NB_CAT; i++) {
-      free(df[i]);
-      free(tf[i]);
+        free(df[i]);
+        free(tf[i]);
     }
     free(df);
     free(tf);
