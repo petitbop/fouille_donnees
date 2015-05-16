@@ -150,16 +150,63 @@ On va tirer, en suivant une lui uniforme[0,1], une valeur $r$, pour chaque docum
 \item Si $r<ratio$ on place le document $di$ dans la base apprentissage.
 \item Sinon on le place dans la base test.
 \end{itemize}
+Ainsi la taille de la base d'apprentissage suit une loi binômiale de paramètres $n=70703$ et $p=ratio$. L'espérance de cette loi est de $n*p=52500$ et son écart-type est de $sqrt{n*p*(1-p)}=116$.
+Vu la taille du problème, la différences entre la taille de la base d'apprentissage obtenue et celle voulue est négligeable.
 
 \item[Q3)]
 \begin{itemize}
-\item Le modèle de Bernouilli : \\
-Le modèle a pour paramètre :\\
- 
+
+\item Le modèle de Bernouilli : \\ 
+
+Le modèle a pour paramètres (apprentissage) :\\
+\begin{math}
+   \hat{\theta}_{t_{i}|k}=\frac{df_{t_{i}}(k)+1}{N_{k}(S)+2} $(lissage de Laplace pour ne que $\hat{\theta}_{t_{i}|k} $ soit non nul)$\\
+   \hat{\pi}_{k} = \frac{N_{k}(S)}{m}
+\end{math}
+
+La prédiction :\\
+\begin{math}
+   k(d^{'})=argmax\limits_{ k \in [1..K] } ( ln( \hat{\pi}_{k} ) + \sum\limits_{ t_{i} \in d^{'} } { ln(\hat{\theta}_{t_{i}|k}) } + \sum\limits_{ t_{i} \notin d^{'} } { ln(1- \hat{\theta}_{ t_{i} | k } )  } )
+\end{math}
+\\
+\\
+\\
+\item Le modèle multinomial : \\  
+
+Le modèle a pour paramètres (apprentissage) :\\
+\begin{math}
+   \hat{\theta}_{t_{i}|k}=\frac{ \sum\limits_{d\in S_k}{ tf_{t_{i} , d} + 1 } }{ \sum \limits_{1}^{V} { \sum \limits_{d \in S_{k}} {tf_{t_{i}, d} + V } } } \\
+   \hat{\pi}_{k} = \frac{N_{k}(S)}{m}
+\end{math}  
+
+La prédiction :\\
+\begin{math}
+   k(d^{'})=argmax\limits_{ k \in [1..K] } ( ln(\hat{\pi}_{k}) + \sum\limits_{ t_{i} \in d^{'} } { w_{id^{'}}ln(\hat{\theta}_{t_{i}|k}) } )
+\end{math}   
+\\
+\\
+\\
+\\
+Nous avons codé les formules du modèle Bernouilli et du modèle multinomial pour la phase d'apprentissage et la phase de prédiction. Nous avons modifié quelques formules du modèle Bernouilli afin d'optimiser le code. 
+\item Lors de la phase d'apprentissagede Bernouilli, nous avons choisi de calculer seulement les $df_{t_{i}}(k)$ et les $N_{k}(S)$ au lieu des $\hat{\theta}_{t_{i}|k}$ et des $\hat{\pi}_{k}$ pour ne stocker que des uint16\_t au lieu des doubles (ce qui prendrait beaucoup plus de mémoire).
+\item Lors de la phase de prédiction de Bernouilli, nous n'avons pas codé la formule exactement. Nous avons calculé 
+$ ln( \hat{\pi}_{k} ) + \sum\limits_{ t_{i} \in Vocab } { ln(1-\hat{\theta}_{t_{i}|k}) } + \sum\limits_{ t_{i} \notin d^{'} } ({ ln( \hat{\theta}_{ t_{i} | k } )-ln( 1-\hat{\theta}_{ t_{i} | k } ) }) $ de façon à minimiser le nombre de calculs de $log$ qui ralentirait beaucoup le programme.
 \end{itemize}
 
+\item[Q4)]
+Avec le modèle Bernouilli : Taux de bonne classification $= 55\%$.\\
+Avec le modèle Multinomiale : Taux de bonne classification $= 75\%$.\\
+
+\item[Q5)]
+A l'issue de 20 expériences, nous calculons la moyenne, la variance et l'écart-type des taux de bonne classification : \\
+\begin{itemize}
+\item Avec le modèle de Bernouilli : La moyenne vaut : $54.814625\%$. La variance vaut : $0.082031$. L'ecart-type vaut : $0.286411$.
+\item Avec le modèle Multinomial : La moyenne vaut : $74.771996\%$. La variance vaut : $0.085938$. L'ecart-type vaut : $0.293151$.
+\end{itemize}
 \end{enumerate}
 
+Conclusion : \\
+Avec les deux modèles, la variance et l'écart-type des taux de bonne classification restent plutôt faible, donc les résultats des deux modèles sont très stables. La moyenne sur les taux de bonne classification avec les deux modèles sont assez différents. Le modèle Multinomial présente un taux de bonne classification largement supérieur à celui du modèle de Bernouilli (différence de $20\%$). Le modèle Multinomial est donc meilleur. Cela peut s'expliquer par le fait que le modèle de Bernouilli ne prend que en compte l'absence ou la présence d'un mot dans un document, alors que le modèle Multinomial prend également en compte la fréquence d'apparition d'un mot dans un document. 
 \end{document}
 
 

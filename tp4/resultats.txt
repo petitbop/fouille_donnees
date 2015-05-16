@@ -1,0 +1,564 @@
+
+Question 1 :
+La taille du vocabulaire est : 141144
+La classe 1 contient 5894 documents
+La classe 2 contient 1003 documents
+La classe 3 contient 2472 documents
+La classe 4 contient 2207 documents
+La classe 5 contient 6010 documents
+La classe 6 contient 2992 documents
+La classe 7 contient 1586 documents
+La classe 8 contient 1226 documents
+La classe 9 contient 2007 documents
+La classe 10 contient 3982 documents
+La classe 11 contient 7757 documents
+La classe 12 contient 3644 documents
+La classe 13 contient 3405 documents
+La classe 14 contient 2307 documents
+La classe 15 contient 1040 documents
+La classe 16 contient 1460 documents
+La classe 17 contient 1191 documents
+La classe 18 contient 1733 documents
+La classe 19 contient 4745 documents
+La classe 20 contient 1411 documents
+La classe 21 contient 1016 documents
+La classe 22 contient 3018 documents
+La classe 23 contient 1050 documents
+La classe 24 contient 1184 documents
+La classe 25 contient 1624 documents
+La classe 26 contient 1296 documents
+La classe 27 contient 1018 documents
+La classe 28 contient 1049 documents
+La classe 29 contient 1376 documents
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52608 elements
+Base de test :
+Cette liste contient 18095 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 55.153358
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52244 elements
+Base de test :
+Cette liste contient 18459 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 54.304134
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52420 elements
+Base de test :
+Cette liste contient 18283 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 54.985504
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52599 elements
+Base de test :
+Cette liste contient 18104 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 55.120415
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52404 elements
+Base de test :
+Cette liste contient 18299 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 54.953823
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52674 elements
+Base de test :
+Cette liste contient 18029 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 54.894890
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52614 elements
+Base de test :
+Cette liste contient 18089 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 54.928410
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52475 elements
+Base de test :
+Cette liste contient 18228 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 54.975861
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52554 elements
+Base de test :
+Cette liste contient 18149 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 55.027824
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52498 elements
+Base de test :
+Cette liste contient 18205 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 55.534195
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52618 elements
+Base de test :
+Cette liste contient 18085 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 55.073265
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52487 elements
+Base de test :
+Cette liste contient 18216 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 55.039524
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52495 elements
+Base de test :
+Cette liste contient 18208 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 54.898945
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52591 elements
+Base de test :
+Cette liste contient 18112 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 55.013252
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52621 elements
+Base de test :
+Cette liste contient 18082 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 54.745049
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52543 elements
+Base de test :
+Cette liste contient 18160 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 54.669605
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52574 elements
+Base de test :
+Cette liste contient 18129 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 54.630703
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52481 elements
+Base de test :
+Cette liste contient 18222 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 55.191528
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52712 elements
+Base de test :
+Cette liste contient 17991 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 55.227615
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52545 elements
+Base de test :
+Cette liste contient 18158 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multivarié de Bernoulli,
+Le taux de bonne classification est de 53.910122
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52477 elements
+Base de test :
+Cette liste contient 18226 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.942390
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52399 elements
+Base de test :
+Cette liste contient 18304 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.808784
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52594 elements
+Base de test :
+Cette liste contient 18109 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.995857
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52541 elements
+Base de test :
+Cette liste contient 18162 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.721947
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52392 elements
+Base de test :
+Cette liste contient 18311 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.747421
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52365 elements
+Base de test :
+Cette liste contient 18338 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.833679
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52395 elements
+Base de test :
+Cette liste contient 18308 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 75.027313
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52405 elements
+Base de test :
+Cette liste contient 18298 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.816917
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52641 elements
+Base de test :
+Cette liste contient 18062 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.903114
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52633 elements
+Base de test :
+Cette liste contient 18070 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.488098
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52728 elements
+Base de test :
+Cette liste contient 17975 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.625870
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52712 elements
+Base de test :
+Cette liste contient 17991 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 75.037521
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52756 elements
+Base de test :
+Cette liste contient 17947 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.279823
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52537 elements
+Base de test :
+Cette liste contient 18166 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.826599
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52577 elements
+Base de test :
+Cette liste contient 18126 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 75.355843
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52381 elements
+Base de test :
+Cette liste contient 18322 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.435104
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52503 elements
+Base de test :
+Cette liste contient 18200 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.642860
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52525 elements
+Base de test :
+Cette liste contient 18178 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.733192
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52486 elements
+Base de test :
+Cette liste contient 18217 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.463417
+
+Question 2 :
+Base d'apprentissage :
+Cette liste contient 52437 elements
+Base de test :
+Cette liste contient 18266 elements
+
+Question 3 :
+DECLARATION OK
+
+Question 4 :
+Dans la base de test du modèle multinomial,
+Le taux de bonne classification est de 74.942513
+
+Question 5 :
+
+RESULTAT FINAL POUR LES 20 EXPERIENCES AVEC BERNOUILLI :
+La moyenne de la serie vaut : 54.913902
+La variance de la serie vaut : 0.114014
+L'ecart type de la serie vaut : 0.337659
+
+RESULTAT FINAL POUR LES 20 EXPERIENCES AVEC MULTINOMIAL :
+La moyenne de la serie vaut : 74.781410
+La variance de la serie vaut : 0.059570
+L'ecart type de la serie vaut : 0.244070
