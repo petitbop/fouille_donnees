@@ -111,6 +111,8 @@ void init2(uint16_t N[NB_CAT], uint32_t D[NB_CAT], uint16_t** tf) {
     }
 }
 
+// initialise les PiF pour le modèle de Bernoulli
+
 void initPiF(double PiF[NB_CAT], uint16_t N[NB_CAT], uint16_t** df, int m) {
     int k;
     uint16_t** dfk;
@@ -127,30 +129,30 @@ void initPiF(double PiF[NB_CAT], uint16_t N[NB_CAT], uint16_t** df, int m) {
     }
 }
 
+// donne la moyenne, variance et écart-type d'un tableau
+
 void stats(float res_tab[NB_ESSAI]) {
-     int i;
-     int N = NB_ESSAI;     
-     float Ai, S1, S2, M;
-     double V, Ec;
+    int i;
+    int N = NB_ESSAI;
+    float Ai, S1, S2, M;
+    double V, Ec;
 
-     S1 = 0;
-     S2 = 0;
+    S1 = 0;
+    S2 = 0;
 
-     for (i=0;i<N;i++)
-     {
-         Ai = res_tab[i];
-         S1 = S1+Ai;
-         S2 = S2+Ai*Ai;
-     }
+    for (i = 0; i < N; i++) {
+        Ai = res_tab[i];
+        S1 = S1 + Ai;
+        S2 = S2 + Ai*Ai;
+    }
 
-     M = S1/N;
-     V = S2/N-M*M;
-     Ec = sqrt (V);
+    M = S1 / N;
+    V = S2 / N - M*M;
+    Ec = sqrt(V);
 
-     printf ("La moyenne de la serie vaut : %f\n", M);
-     printf ("La variance de la serie vaut : %lf\n", V);
-     printf ("L'ecart type de la serie vaut : %lf\n", Ec);
-
+    printf("La moyenne de la serie vaut : %f\n", M);
+    printf("La variance de la serie vaut : %lf\n", V);
+    printf("L'ecart type de la serie vaut : %lf\n", Ec);
 }
 
 #endif	/* SCINDEUR_H */
